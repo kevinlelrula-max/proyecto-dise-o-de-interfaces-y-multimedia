@@ -1,0 +1,26 @@
+import { Router } from "express";
+import {
+  crearVenta,
+  listarVentasEmpresa,
+  detalleVenta,
+  historialCliente,
+  reporteProductos
+} from "../controllers/ventas.controller.js";
+import { verificarToken } from "../middlewares/auth.middleware.js";
+
+const router = Router();
+
+// Crear venta (cliente o POS)
+router.post("/", verificarToken, crearVenta);
+
+// Ventas de la empresa logueada
+router.get("/empresa", verificarToken, listarVentasEmpresa);
+
+// Reportes
+router.get("/reportes/productos", verificarToken, reporteProductos);
+
+// ✅ Nuevas — van ANTES de /:id para que Express no las confunda con un id
+router.get("/cliente/:cliente_id", verificarToken, historialCliente);
+router.get("/:id",                 verificarToken, detalleVenta);
+
+export default router;
