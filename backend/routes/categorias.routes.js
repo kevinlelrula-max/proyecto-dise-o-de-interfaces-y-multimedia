@@ -5,7 +5,7 @@ import {
   actualizarCategoria,
   toggleEstadoCategoria,
   eliminarCategoria
-} from "../controllers/Categorias.controller.js";
+} from "../controllers/categorias.controller.js";
 import { verificarToken } from "../middlewares/auth.middleware.js";
 
 const router = Router();
