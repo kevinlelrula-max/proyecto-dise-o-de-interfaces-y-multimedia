@@ -1,8 +1,8 @@
 import { useState } from "react";
-import useUsuarios from "./hooks/useUsuarios";
+import useUsuarios from "./hooks/useUsuarios.js";
 import TablaUsuarios from "./components/TablaUsuarios";
 import FormUsuario from "./components/FormUsuario";
-import GestionRoles from "./components/GestionRoles";
+import Gestionroles from "./components/Gestionroles";
 
 export default function Usuarios() {
   const { usuarios, agregarUsuario, actualizarUsuario, toggleUsuario, eliminarUsuario } = useUsuarios();
@@ -124,7 +124,7 @@ export default function Usuarios() {
       )}
 
       {/* ════ PESTAÑA ROLES ════ */}
-      {pestana === "roles" && <GestionRoles />}
+      {pestana === "roles" && <Gestionroles />}
 
       {/* MODAL */}
       {mostrarForm && (
