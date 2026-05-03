@@ -62,7 +62,7 @@ export default function GestionRoles() {
   const cargar = async () => {
     setCargando(true);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/api/usuarios/roles/todos", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/api/usuarios/roles/todos`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
