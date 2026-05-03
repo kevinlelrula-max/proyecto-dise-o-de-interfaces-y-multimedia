@@ -143,3 +143,19 @@ export const eliminarProducto = async (req, res) => {
     res.status(500).json({ error: "Error al eliminar producto" });
   }
 };
+
+export const getProductosPorEmpresaPublico = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await pool.query(
+      "SELECT * FROM productos WHERE empresa_id = $1",
+      [id]
+    );
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Error productos públicos:", error);
+    res.status(500).json({ error: "Error al obtener productos" });
+  }
+};

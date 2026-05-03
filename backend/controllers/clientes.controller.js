@@ -147,3 +147,106 @@ export const eliminarCliente = async (req, res) => {
     res.status(500).json({ error: "Error al eliminar cliente" });
   }
 };
+
+export const loginCliente = async (req, res) => {
+  try {
+    const { usuario, contrasena } = req.body;
+
+    const result = await pool.query(
+      `SELECT id, nombre, usuario, contrasena, rol_id
+       FROM persona
+       WHERE usuario = $1 AND rol_id = 4`,
+      [usuario]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(401).json({ error: "Credenciales incorrectas" });
+    }
+
+    const cliente = result.rows[0];
+
+    const match = await bcrypt.compare(contrasena, cliente.contrasena);
+
+    if (!match) {
+      return res.status(401).json({ error: "Credenciales incorrectas" });
+    }
+
+    const token = generarToken(cliente);
+
+    res.json({
+      token,
+      id: cliente.id,   
+      usuario: cliente.usuario,
+      rol_id: cliente.rol_id
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: "Error en login cliente" });
+  }
+};
+
+// Reemplaza SOLO la función registrarClientePublico en tu clientes.controller.js
+
+export const registrarClientePublico = async (req, res) => {
+  try {
+    const {
+      nombre,
+      apellido,
+      usuario,
+      contrasena,
+      telefono,
+      direccion,
+      numero_documento,
+      tipo_documento,
+      id_municipio,
+    } = req.body;
+
+    if (!usuario || !contrasena) {
+      return res.status(400).json({ error: "Faltan datos obligatorios" });
+    }
+
+    const hash = await bcrypt.hash(contrasena, 10);
+
+    const result = await pool.query(
+      `INSERT INTO persona 
+      (empresa_id, nombre, apellido, usuario, contrasena, telefono, direccion,
+       numero_documento, tipo_documento, id_municipio, rol_id)
+      VALUES (NULL,$1,$2,$3,$4,$5,$6,$7,$8,$9,4)
+      RETURNING id, nombre, usuario, rol_id`,
+      [
+        nombre,
+        apellido || null,
+        usuario,
+        hash,
+        telefono || null,
+        direccion || null,
+        numero_documento || null,
+        tipo_documento || "Cédula de ciudadanía",
+        id_municipio || null,
+      ]
+    );
+
+    const cliente = result.rows[0];
+
+    // ✅ Generar token igual que en loginCliente
+    const token = generarToken(cliente);
+
+    return res.json({
+      token,
+      id: cliente.id,        // ← consistente con loginCliente
+      nombre: cliente.nombre,
+      usuario: cliente.usuario,
+      rol_id: cliente.rol_id,
+    });
+
+  } catch (error) {
+    console.log("🔥 ERROR:", error);
+    if (error.code === "23505") {
+      return res.status(400).json({ error: "El usuario ya existe" });
+    }
+    return res.status(500).json({
+      error: "Error en registro cliente",
+      detalle: error.message,
+    });
+  }
+};

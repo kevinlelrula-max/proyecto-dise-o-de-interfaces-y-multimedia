@@ -7,6 +7,10 @@ import {
   eliminarCategoria
 } from "../services/categorias.api";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Swal from "sweetalert2";
+
 export default function Categorias() {
   const token = localStorage.getItem("token");
 
@@ -31,6 +35,7 @@ export default function Categorias() {
       setCategorias(data);
     } catch (e) {
       console.error(e);
+      toast.error("Error al cargar categorías");
     } finally {
       setCargando(false);
     }
@@ -49,8 +54,9 @@ export default function Categorias() {
       const nueva = await crearCategoria({ nombre: nuevaNombre }, token);
       setCategorias([...categorias, nueva]);
       setNuevaNombre("");
+      toast.success("Categoría creada correctamente");
     } catch (error) {
-      alert(error.response?.data?.error || "Error al crear categoría");
+      toast.error(error.response?.data?.error || "Error al crear categoría");
     } finally {
       setGuardando(false);
     }
@@ -70,8 +76,9 @@ export default function Categorias() {
       const actualizada = await actualizarCategoria(id, { nombre: editandoNombre }, token);
       setCategorias(categorias.map(c => c.id === id ? actualizada : c));
       setEditandoId(null);
+      toast.success("Categoría actualizada");
     } catch (error) {
-      alert(error.response?.data?.error || "Error al actualizar");
+      toast.error(error.response?.data?.error || "Error al actualizar");
     }
   };
 
@@ -82,8 +89,9 @@ export default function Categorias() {
     try {
       const actualizada = await toggleCategoria(id, token);
       setCategorias(categorias.map(c => c.id === id ? actualizada : c));
+      toast.info("Estado actualizado");
     } catch (error) {
-      alert(error.response?.data?.error || "Error al cambiar estado");
+      toast.error(error.response?.data?.error || "Error al cambiar estado");
     }
   };
 
@@ -91,12 +99,24 @@ export default function Categorias() {
   // ELIMINAR
   // =========================
   const handleEliminar = async (id) => {
-    if (!confirm("¿Eliminar esta categoría?")) return;
+    const result = await Swal.fire({
+      title: "¿Eliminar esta categoría?",
+      text: "Esta acción no se puede deshacer",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#d33"
+    });
+
+    if (!result.isConfirmed) return;
+
     try {
       await eliminarCategoria(id, token);
       setCategorias(categorias.filter(c => c.id !== id));
+      toast.success("Categoría eliminada 🗑");
     } catch (error) {
-      alert(error.response?.data?.error || "Error al eliminar");
+      toast.error(error.response?.data?.error || "Error al eliminar");
     }
   };
 
@@ -105,6 +125,8 @@ export default function Categorias() {
 
   return (
     <>
+      <ToastContainer position="top-right" autoClose={2500} />
+
       <style>{`
         .cat-wrap { display: flex; flex-direction: column; gap: 20px; }
 
@@ -248,7 +270,6 @@ export default function Categorias() {
                   <span className="cat-item-nombre">{cat.nombre}</span>
                 )}
 
-                {/* Toggle estado */}
                 <span
                   className={`badge-estado ${cat.estado ? "badge-activo" : "badge-inactivo"}`}
                   onClick={() => handleToggle(cat.id)}
@@ -257,7 +278,6 @@ export default function Categorias() {
                   {cat.estado ? "Activa" : "Inactiva"}
                 </span>
 
-                {/* Acciones */}
                 <div className="cat-actions">
                   {editandoId === cat.id ? (
                     <>

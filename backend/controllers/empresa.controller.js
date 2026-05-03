@@ -115,3 +115,21 @@ export const registrarEmpresa = async (req, res) => {
     client.release();
   }
 };
+
+export const getEmpresasPublicas = async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT id, nombre, nit, email, telefono
+       FROM empresas
+       ORDER BY nombre ASC`
+    );
+
+    res.json(result.rows);
+
+  } catch (error) {
+    console.error("❌ ERROR getEmpresasPublicas:", error);
+    res.status(500).json({
+      error: "Error al obtener empresas"
+    });
+  }
+};

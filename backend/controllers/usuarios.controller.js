@@ -173,11 +173,10 @@ export const eliminarUsuario = async (req, res) => {
 };
 
 // =========================
-// GET ROLES (para el selector)
+// GET ROLES — para el selector del formulario (sin SuperAdmin ni Cliente)
 // =========================
 export const getRoles = async (req, res) => {
   try {
-    // Excluir SuperAdmin(1) y Cliente(4) del selector
     const result = await pool.query(
       `SELECT id, nombre FROM roles WHERE id NOT IN (1, 4) ORDER BY id ASC`
     );
@@ -188,12 +187,27 @@ export const getRoles = async (req, res) => {
 };
 
 // =========================
-// CREAR ROL
+// GET TODOS LOS ROLES — para la vista de gestión de roles (todos)
+// =========================
+export const getTodosRoles = async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT id, nombre FROM roles ORDER BY id ASC`
+    );
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: "Error al obtener roles" });
+  }
+};
+
+// =========================
+// CREAR ROL — permitido para SuperAdmin y Administrador
 // =========================
 export const crearRol = async (req, res) => {
   try {
-    if (req.user.rol_id !== 1) {
-      return res.status(403).json({ error: "Solo el SuperAdmin puede crear roles" });
+    // ✅ Ahora también el Administrador puede crear roles
+    if (req.user.rol_id !== 1 && req.user.rol_id !== 2) {
+      return res.status(403).json({ error: "No tienes permisos para crear roles" });
     }
 
     const { nombre } = req.body;
@@ -216,8 +230,64 @@ export const crearRol = async (req, res) => {
 };
 
 // =========================
-// GET PERFIL
+// GET PERMISOS DE UN ROL
 // =========================
+export const getPermisosRol = async (req, res) => {
+  try {
+    const { rol_id } = req.params;
+    const result = await pool.query(
+      `SELECT seccion FROM rol_permisos WHERE rol_id = $1`,
+      [rol_id]
+    );
+    res.json(result.rows.map(r => r.seccion));
+  } catch (error) {
+    res.status(500).json({ error: "Error al obtener permisos" });
+  }
+};
+
+// =========================
+// ACTUALIZAR PERMISOS DE UN ROL
+// =========================
+export const actualizarPermisosRol = async (req, res) => {
+  const client = await pool.connect();
+  try {
+    if (req.user.rol_id !== 1 && req.user.rol_id !== 2) {
+      return res.status(403).json({ error: "No tienes permisos para modificar roles" });
+    }
+
+    const { rol_id } = req.params;
+    const { secciones } = req.body; // array de strings
+
+    // No permitir modificar roles base
+    if ([1, 2, 3, 4].includes(Number(rol_id))) {
+      return res.status(403).json({ error: "No se pueden modificar los permisos de roles base" });
+    }
+
+    await client.query("BEGIN");
+
+    // Borrar permisos actuales
+    await client.query(`DELETE FROM rol_permisos WHERE rol_id = $1`, [rol_id]);
+
+    // Insertar los nuevos
+    if (secciones && secciones.length > 0) {
+      for (const seccion of secciones) {
+        await client.query(
+          `INSERT INTO rol_permisos (rol_id, seccion) VALUES ($1, $2)`,
+          [rol_id, seccion]
+        );
+      }
+    }
+
+    await client.query("COMMIT");
+    res.json({ message: "Permisos actualizados", secciones });
+  } catch (error) {
+    await client.query("ROLLBACK");
+    console.error(error);
+    res.status(500).json({ error: "Error al actualizar permisos" });
+  } finally {
+    client.release();
+  }
+};
 export const getPerfil = async (req, res) => {
   try {
     const id = req.user.id;

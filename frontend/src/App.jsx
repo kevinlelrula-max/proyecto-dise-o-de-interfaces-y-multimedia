@@ -1,9 +1,5 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
-
-// Usuarios
-import Login from "./pages/Login";
-import Register from "./pages/Register";
 
 // Empresas
 import RegistroEmpresa from "./components/RegistroEmpresa";
@@ -14,34 +10,45 @@ import Perfil from "./modules/perfil/Perfil";
 // POS
 import Ventas from "./pages/VentasEmpresa";
 
-// ✅ REPORTES
+// Reportes
 import Reportes from "./pages/Reportes";
+
+// Tienda cliente
+import LoginCliente from "./pages/LoginCliente";
+import RegistroCliente from "./pages/RegistroCliente";
+import Tienda from "./pages/Tienda"; // ✅ IMPORTANTE (créalo si no existe)
+import MisPedidos from "./pages/MisPedidos";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+
+        {/* ── Página principal ── */}
         <Route path="/" element={<Home />} />
 
-        {/* Empresas */}
+        {/* ── Empresas ── */}
         <Route path="/empresa/registro" element={<RegistroEmpresa />} />
         <Route path="/empresa/login" element={<LoginEmpresa />} />
 
-        {/* Clientes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-
-        {/* Dashboard */}
+        {/* ── Dashboard empresa ── */}
         <Route path="/dashboard" element={<DashboardEmpresa />} />
-
-        {/* Perfil */}
         <Route path="/perfil" element={<Perfil />} />
-
-        {/* POS */}
         <Route path="/ventas" element={<Ventas />} />
-
-        {/* 🔥 REPORTES */}
         <Route path="/reportes" element={<Reportes />} />
+
+        {/* ── Tienda cliente ── */}
+        <Route path="/tienda" element={<Tienda />} /> {/* ✅ YA NO DA ERROR */}
+        <Route path="/tienda/login" element={<LoginCliente />} />
+        <Route path="/tienda/registro" element={<RegistroCliente />} />
+        <Route path="/tienda/mis-pedidos" element={<MisPedidos />} />
+
+        {/* 🔁 Redirección opcional */}
+        {/* Si alguien entra a algo raro dentro de tienda */}
+        <Route path="/tienda/*" element={<Navigate to="/tienda" />} />
+
+        {/* 🚫 Ruta fallback global */}
+        <Route path="*" element={<h1>404 - Página no encontrada</h1>} />
 
       </Routes>
     </BrowserRouter>

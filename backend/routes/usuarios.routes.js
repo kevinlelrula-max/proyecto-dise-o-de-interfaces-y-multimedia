@@ -6,7 +6,10 @@ import {
   toggleUsuario,
   eliminarUsuario,
   getRoles,
+  getTodosRoles,
   crearRol,
+  getPermisosRol,
+  actualizarPermisosRol,
   getPerfil,
   actualizarPerfil
 } from "../controllers/usuarios.controller.js";
@@ -20,8 +23,11 @@ router.get("/perfil",       verificarToken, getPerfil);
 router.put("/perfil",       verificarToken, actualizarPerfil);
 
 // Roles
-router.get("/roles",        verificarToken, getRoles);
-router.post("/roles",       verificarToken, crearRol);
+router.get("/roles",              verificarToken, getRoles);
+router.get("/roles/todos",        verificarToken, getTodosRoles);
+router.post("/roles",             verificarToken, crearRol);
+router.get("/roles/:rol_id/permisos",    verificarToken, getPermisosRol);
+router.put("/roles/:rol_id/permisos",    verificarToken, actualizarPermisosRol);
 
 // Usuarios — rutas generales
 router.get("/",             verificarToken, getUsuarios);
