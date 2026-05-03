@@ -9,7 +9,7 @@ import Reportes from "../pages/Reportes";
 import PuntoDeVenta from "../modules/pos/PuntoDeVenta";
 import Configuracion from "../modules/configuracion/Configuracion";
 
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const BASE_URL = import.meta.env.VITE_API_URL || `${import.meta.env.VITE_API_URL || "http://localhost:3000"}`;
 
 const PERMISOS = {
   1: ["productos", "clientes", "ventas", "reportes", "usuarios", "pos", "configuracion"],

@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/api";
+// ✅ Usa variable de entorno en producción, localhost en desarrollo
+const API_URL = `${import.meta.env.VITE_API_URL || `${import.meta.env.VITE_API_URL || "http://localhost:3000"}`}/api`;
 
 // =========================
 // 🔹 REGISTRO USUARIO
@@ -53,8 +54,7 @@ export const login = async (data) => {
 };
 
 // =========================
-// 🛒 REGISTRO CLIENTE (tienda)
-// Crea una persona con rol_id: 4 y empresa_id: null
+// 🛒 REGISTRO CLIENTE
 // =========================
 export const registroCliente = async (data) => {
   try {
@@ -64,21 +64,34 @@ export const registroCliente = async (data) => {
     return error.response?.data || { error: "Error en registro de cliente" };
   }
 };
+
 // =========================
-// 🛒 LOGIN CLIENTE (tienda)
-// Usa el mismo auth pero verifica rol_id === 4
+// 🛒 LOGIN CLIENTE
 // =========================
 export const loginCliente = async (data) => {
   try {
-    const res = await axios.post("http://localhost:3000/api/clientes/login", data)
+    const res = await axios.post(`${API_URL}/clientes/login`, data);
     return res.data;
   } catch (error) {
     return error.response?.data || { error: "Error en login de cliente" };
   }
 };
+
 // =========================
-// 🛒 EMPRESAS PÚBLICAS (marketplace)
-// No requiere token — listado público para la tienda
+// 🛒 EMPRESA POR SLUG
+// =========================
+export const getEmpresaPorSlug = async (slug) => {
+  try {
+    const res = await axios.get(`${API_URL}/empresa/slug/${slug}`);
+    return res.data;
+  } catch (error) {
+    console.error("Error getEmpresaPorSlug:", error);
+    return null;
+  }
+};
+
+// =========================
+// 🛒 EMPRESAS PÚBLICAS
 // =========================
 export const getEmpresasPublicas = async () => {
   try {
@@ -91,12 +104,11 @@ export const getEmpresasPublicas = async () => {
 };
 
 // =========================
-// 🛒 PRODUCTOS PÚBLICOS DE UNA EMPRESA
-// No requiere token — catálogo público por slug o id
+// 🛒 PRODUCTOS PÚBLICOS
 // =========================
-export const getProductosPublicos = async (empresaSlug) => {
+export const getProductosPublicos = async (empresaId) => {
   try {
-    const res = await axios.get(`${API_URL}/tienda/empresas/${empresaSlug}/productos`);
+    const res = await axios.get(`${API_URL}/productos/publicos/${empresaId}`);
     return res.data;
   } catch (error) {
     console.error("Error getProductosPublicos:", error);
@@ -106,7 +118,6 @@ export const getProductosPublicos = async (empresaSlug) => {
 
 // =========================
 // 🛒 CREAR PEDIDO ONLINE
-// Requiere token del cliente
 // =========================
 export const crearPedidoOnline = async (data, token) => {
   try {
@@ -121,7 +132,6 @@ export const crearPedidoOnline = async (data, token) => {
 
 // =========================
 // 🛒 MIS PEDIDOS (cliente)
-// Historial de pedidos del cliente logueado
 // =========================
 export const getMisPedidos = async (token) => {
   try {
@@ -136,8 +146,7 @@ export const getMisPedidos = async (token) => {
 };
 
 // =========================
-// 🛒 ESTADO DE UN PEDIDO (polling)
-// Se llama cada 30 seg para ver si cambió el estado
+// 🛒 ESTADO DE UN PEDIDO
 // =========================
 export const getEstadoPedido = async (pedidoId, token) => {
   try {
@@ -152,8 +161,7 @@ export const getEstadoPedido = async (pedidoId, token) => {
 };
 
 // =========================
-// 🔥 PEDIDOS ONLINE (panel cajero)
-// El cajero ve los pedidos online de su empresa
+// 🔥 PEDIDOS ONLINE (panel empresa)
 // =========================
 export const getPedidosOnlineEmpresa = async (token) => {
   try {
@@ -168,8 +176,7 @@ export const getPedidosOnlineEmpresa = async (token) => {
 };
 
 // =========================
-// 🔥 ACTUALIZAR ESTADO PEDIDO (cajero)
-// El cajero cambia el estado: pendiente → confirmado → etc.
+// 🔥 ACTUALIZAR ESTADO PEDIDO
 // =========================
 export const actualizarEstadoPedido = async (pedidoId, estado, token) => {
   try {
@@ -237,7 +244,7 @@ export const getClientes = async (token) => {
 };
 
 // =========================
-// 🔹 VENTAS (POS - CREAR)
+// 🔹 VENTAS (POS)
 // =========================
 export const crearVenta = async (data, token) => {
   try {
@@ -250,9 +257,6 @@ export const crearVenta = async (data, token) => {
   }
 };
 
-// =========================
-// 🔹 VENTAS (GENERAL)
-// =========================
 export const getVentas = async (token) => {
   try {
     const res = await axios.get(`${API_URL}/ventas`, {
@@ -265,9 +269,6 @@ export const getVentas = async (token) => {
   }
 };
 
-// =========================
-// 🔥 VENTAS EMPRESA (HISTORIAL)
-// =========================
 export const getVentasEmpresa = async (token) => {
   try {
     const res = await axios.get(`${API_URL}/ventas/empresa`, {
@@ -294,7 +295,7 @@ export const getMetodosPago = async () => {
 };
 
 // =========================
-// 🔹 REPORTES PRODUCTOS
+// 🔹 REPORTES
 // =========================
 export const getReporteProductos = async (token) => {
   try {
@@ -309,8 +310,7 @@ export const getReporteProductos = async (token) => {
 };
 
 // =========================
-// 🛒 PRODUCTOS TIENDA (empresa fija)
-// Catálogo público de Pesquera Estrada
+// 🛒 PRODUCTOS TIENDA
 // =========================
 export const getProductosTienda = async () => {
   try {

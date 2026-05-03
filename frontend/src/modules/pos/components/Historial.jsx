@@ -6,7 +6,7 @@ export default function Historial({ token }) {
   useEffect(() => {
     const fetchHistorial = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/ventas/empresa", {
+        const res = await fetch("${import.meta.env.VITE_API_URL || "http://localhost:3000"}/api/ventas/empresa", {
           headers: {
             Authorization: `Bearer ${token}`
           }

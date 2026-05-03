@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:3000";
+const API_BASE = `${import.meta.env.VITE_API_URL || "http://localhost:3000"}`;
 const IMG_PLACEHOLDER = "https://placehold.co/300x200/E1F5EE/0F6E56?text=🐟";
 
 export default function ProductGrid({ productos, agregarProducto, busqueda, setBusqueda }) {

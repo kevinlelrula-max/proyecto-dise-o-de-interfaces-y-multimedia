@@ -62,7 +62,7 @@ export default function GestionRoles() {
   const cargar = async () => {
     setCargando(true);
     try {
-      const res = await fetch("http://localhost:3000/api/usuarios/roles/todos", {
+      const res = await fetch("${import.meta.env.VITE_API_URL || "http://localhost:3000"}/api/usuarios/roles/todos", {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -100,7 +100,7 @@ export default function GestionRoles() {
     }
     setRolEditando(rol);
     try {
-      const res = await fetch(`http://localhost:3000/api/usuarios/roles/${rol.id}/permisos`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/api/usuarios/roles/${rol.id}/permisos`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -124,7 +124,7 @@ export default function GestionRoles() {
   const guardarPermisos = async () => {
     setGuardandoPermisos(true);
     try {
-      const res = await fetch(`http://localhost:3000/api/usuarios/roles/${rolEditando.id}/permisos`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/api/usuarios/roles/${rolEditando.id}/permisos`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
