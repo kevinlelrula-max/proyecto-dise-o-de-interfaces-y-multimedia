@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "${import.meta.env.VITE_API_URL || "http://localhost:3000"}/api/clientes";
+const API = `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/api/clientes`;
 
 export const getClientes = async (token) => {
   const res = await axios.get(API, {

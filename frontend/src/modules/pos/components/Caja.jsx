@@ -6,7 +6,7 @@ export default function Caja({ token }) {
   useEffect(() => {
     const fetchCaja = async () => {
       try {
-        const res = await fetch("${import.meta.env.VITE_API_URL || "http://localhost:3000"}/api/ventas/empresa", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/api/ventas/empresa", {
           headers: {
             Authorization: `Bearer ${token}`
           }
