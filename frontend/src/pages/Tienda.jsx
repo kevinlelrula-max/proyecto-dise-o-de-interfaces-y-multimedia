@@ -30,6 +30,8 @@ function getIniciales(nombre) {
     .join("");
 }
 
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
 export default function Tienda() {
   const navigate = useNavigate();
 
@@ -198,6 +200,10 @@ export default function Tienda() {
               const iniciales = getIniciales(producto.nombre);
               const isHovered = hoveredId === producto.id;
 
+              const imgSrc = producto.imagen_url
+                ? `${API_BASE}${producto.imagen_url}`
+                : null;
+
               return (
                 <div
                   key={producto.id}
@@ -208,20 +214,30 @@ export default function Tienda() {
                   onMouseEnter={() => setHoveredId(producto.id)}
                   onMouseLeave={() => setHoveredId(null)}
                 >
-                  <div style={s.cardBody}>
-                    <div style={{ ...s.avatar, backgroundColor: bg, color }}>
+                  {/* imagen o avatar */}
+                  <div style={s.imgWrap}>
+                    {imgSrc ? (
+                      <img
+                        src={imgSrc}
+                        alt={producto.nombre}
+                        style={s.img}
+                        onError={(e) => { e.target.style.display = "none"; e.target.nextSibling.style.display = "flex"; }}
+                      />
+                    ) : null}
+                    <div style={{ ...s.avatar, backgroundColor: bg, color, display: imgSrc ? "none" : "flex" }}>
                       {iniciales}
                     </div>
+                  </div>
 
+                  <div style={s.cardBody}>
                     <div style={s.cardInfo}>
                       <h3 style={s.cardNombre}>{producto.nombre}</h3>
-                      <p style={s.cardTel}>💰 ${producto.precio}</p>
-                      <p style={s.cardNit}>Stock: {producto.stock ?? "N/A"}</p>
+                      <p style={s.cardTel}>💰 ${Number(producto.precio).toLocaleString("es-CO")}/kg</p>
+                      <p style={s.cardNit}>Stock: {producto.stock ?? "N/A"} kg</p>
                     </div>
 
                     <div style={s.cardFooter}>
                       <div style={s.onlineBadge}>🟢 Disponible</div>
-
                       <button
                         style={{
                           ...s.cardBtn,
@@ -501,6 +517,23 @@ const s = {
     border: "1px solid #e2e8f0",
     transition: "all 0.22s ease",
     cursor: "default",
+    display: "flex",
+    flexDirection: "column",
+  },
+  imgWrap: {
+    width: "100%",
+    height: "140px",
+    background: "#f0f7f4",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+    flexShrink: 0,
+  },
+  img: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
   },
   cardBar: {
     height: "4px",
@@ -513,13 +546,13 @@ const s = {
     gap: "12px",
   },
   avatar: {
-    width: "48px",
-    height: "48px",
-    borderRadius: "12px",
+    width: "64px",
+    height: "64px",
+    borderRadius: "14px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: "16px",
+    fontSize: "20px",
     fontWeight: "800",
     letterSpacing: "-0.02em",
   },

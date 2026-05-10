@@ -8,22 +8,26 @@ import Ventas from "../pages/VentasEmpresa";
 import Reportes from "../pages/Reportes";
 import PuntoDeVenta from "../modules/pos/PuntoDeVenta";
 import Configuracion from "../modules/configuracion/Configuracion";
+import PedidosEmpresa from "../modules/pedidos/PedidosEmpresa";
+import Integraciones from "../modules/integraciones/Integraciones";
 
 const BASE_URL = import.meta.env.VITE_API_URL || `${import.meta.env.VITE_API_URL || "http://localhost:3000"}`;
 
 const PERMISOS = {
-  1: ["productos", "clientes", "ventas", "reportes", "usuarios", "pos", "configuracion"],
-  2: ["productos", "clientes", "ventas", "reportes", "usuarios", "pos", "configuracion"],
-  3: ["pos", "clientes"],
+  1: ["productos", "clientes", "ventas", "reportes", "usuarios", "pos", "configuracion", "pedidos", "integraciones"],
+  2: ["productos", "clientes", "ventas", "reportes", "usuarios", "pos", "configuracion", "pedidos", "integraciones"],
+  3: ["pos", "clientes", "pedidos"],
 };
 
 const TODO_EL_MENU = [
-  { key: "productos",     label: "Productos",      icon: ProductosIcon },
-  { key: "clientes",      label: "Clientes",       icon: ClientesIcon },
-  { key: "ventas",        label: "Ventas",         icon: VentasIcon },
-  { key: "reportes",      label: "Reportes",       icon: ReportesIcon },
-  { key: "usuarios",      label: "Usuarios",       icon: UsuariosIcon },
-  { key: "pos",           label: "Punto de venta", icon: PosIcon },
+  { key: "productos",      label: "Productos",       icon: ProductosIcon },
+  { key: "clientes",       label: "Clientes",        icon: ClientesIcon },
+  { key: "pedidos",        label: "Pedidos online",  icon: PedidosIcon },
+  { key: "ventas",         label: "Ventas",          icon: VentasIcon },
+  { key: "reportes",       label: "Reportes",        icon: ReportesIcon },
+  { key: "usuarios",       label: "Usuarios",        icon: UsuariosIcon },
+  { key: "pos",            label: "Punto de venta",  icon: PosIcon },
+  { key: "integraciones",  label: "Integraciones",   icon: IntegracionesIcon },
 ];
 
 function decodeToken(token) {
@@ -82,6 +86,26 @@ function PosIcon({ active }) {
       <rect x="2" y="3" width="20" height="14" rx="2"/>
       <path d="M8 21h8M12 17v4"/>
       <path d="M7 8h.01M11 8h.01M15 8h.01M7 12h.01M11 12h.01M15 12h.01"/>
+    </svg>
+  );
+}
+function PedidosIcon({ active }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={active ? "#fff" : "#7A8BA0"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <path d="M16 10a4 4 0 0 1-8 0"/>
+    </svg>
+  );
+}
+function IntegracionesIcon({ active }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={active ? "#fff" : "#7A8BA0"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="2" width="6" height="6" rx="1"/>
+      <rect x="16" y="2" width="6" height="6" rx="1"/>
+      <rect x="2" y="16" width="6" height="6" rx="1"/>
+      <path d="M5 8v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8"/>
+      <line x1="12" y1="13" x2="12" y2="16"/>
     </svg>
   );
 }
@@ -556,7 +580,7 @@ export default function DashboardEmpresa() {
 
           <nav className="fw-sb-nav">
             <div className="fw-sb-section">Principal</div>
-            {menu.filter(i => ["productos","clientes","ventas","reportes"].includes(i.key)).map(item => {
+            {menu.filter(i => ["productos","clientes","pedidos","ventas","reportes","integraciones"].includes(i.key)).map(item => {
               const Icon = item.icon;
               const active = seccion === item.key;
               return (
@@ -669,6 +693,8 @@ export default function DashboardEmpresa() {
             <div className="fw-content-card">
               {seccion === "productos"     && <Productos />}
               {seccion === "clientes"      && <Clientes />}
+              {seccion === "pedidos"        && <PedidosEmpresa />}
+              {seccion === "integraciones" && <Integraciones />}
               {seccion === "ventas"        && <Ventas />}
               {seccion === "reportes"      && <Reportes />}
               {seccion === "usuarios"      && <Usuarios />}

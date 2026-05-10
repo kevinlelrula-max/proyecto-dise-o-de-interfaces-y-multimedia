@@ -13,8 +13,9 @@ import configuracionRoutes from "./routes/configuracion.routes.js";
 import ubicacionRoutes     from "./routes/ubicacion.routes.js";
 import categoriasRoutes    from "./routes/categorias.routes.js";
 import empresaRoutes       from "./routes/empresa.routes.js";
-import tiendaRoutes        from "./routes/tienda.routes.js"; // 🛒 NUEVO
+import tiendaRoutes        from "./routes/tienda.routes.js";
 import pedidosRoutes       from "./routes/pedidos.routes.js";
+import pagosRoutes         from "./routes/pagos.routes.js";
 
 const app = express();
 
@@ -53,7 +54,8 @@ app.use("/api/empresas",         empresaRoutes);
 
 // 🛒 TIENDA PÚBLICA (sin autenticación)
 app.use("/api/tienda",           tiendaRoutes);
-app.use("/api/pedidos", pedidosRoutes);
+app.use("/api/pedidos",          pedidosRoutes);
+app.use("/api/pagos",            pagosRoutes);
 // =========================
 // 🔹 404 HANDLER
 // =========================

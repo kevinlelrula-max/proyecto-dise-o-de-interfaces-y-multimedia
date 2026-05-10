@@ -46,3 +46,12 @@ export const getMetodosPago = async () => {
     return [];
   }
 };
+
+export const crearPaymentIntent = async (amount) => {
+  try {
+    const res = await axios.post(`${API_URL}/pagos/intent`, { amount });
+    return res.data;
+  } catch (error) {
+    return { error: error.response?.data?.error || "Error al iniciar el pago" };
+  }
+};

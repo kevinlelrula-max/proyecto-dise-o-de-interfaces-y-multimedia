@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { loginCliente, registroCliente } from "../../../services/api";
-import { getMetodosPago, crearPedido, EMPRESA_ID } from "../services/tiendaService";
+import { getMetodosPago, crearPedido, crearPaymentIntent, EMPRESA_ID } from "../services/tiendaService";
+import PagoStripe from "./PagoStripe";
 
 function formatPrecio(p) {
   return new Intl.NumberFormat("es-CO", {
@@ -32,6 +33,7 @@ export default function ModalPedido({ items, total, onCerrar, onExito }) {
   const [metodos, setMetodos]       = useState([]);
   const [cargando, setCargando]     = useState(false);
   const [error, setError]           = useState("");
+  const [clientSecret, setClientSecret] = useState(null);
 
   const [loginData, setLoginData]   = useState({ usuario: "", contrasena: "" });
   const [regData, setRegData]       = useState({
@@ -66,7 +68,6 @@ export default function ModalPedido({ items, total, onCerrar, onExito }) {
     setCargando(false);
     if (res.error) return setError(res.error);
 
-    // Si el backend ya devuelve token (versión corregida), usarlo directo
     if (res.token && res.id) {
       guardarSesion(res);
       setCliente(res);
@@ -74,7 +75,6 @@ export default function ModalPedido({ items, total, onCerrar, onExito }) {
       return;
     }
 
-    // Fallback: login manual
     setCargando(true);
     const login = await loginCliente({ usuario: regData.usuario, contrasena: regData.contrasena });
     setCargando(false);
@@ -82,6 +82,11 @@ export default function ModalPedido({ items, total, onCerrar, onExito }) {
     guardarSesion(login);
     setCliente(login);
     setPaso("pedido");
+  };
+
+  const esMetodoTarjeta = () => {
+    const metodo = metodos.find((m) => m.id === Number(pedidoData.metodo_pago_id));
+    return metodo?.metodo?.toLowerCase() === "tarjeta";
   };
 
   const handlePedido = async () => {
@@ -95,27 +100,59 @@ export default function ModalPedido({ items, total, onCerrar, onExito }) {
       return;
     }
 
+    // Si es tarjeta, primero crear el PaymentIntent y mostrar Stripe
+    if (esMetodoTarjeta()) {
+      setError(""); setCargando(true);
+      const res = await crearPaymentIntent(total);
+      setCargando(false);
+      if (res.error) return setError(res.error);
+      setClientSecret(res.client_secret);
+      setPaso("pago");
+      return;
+    }
+
+    // Otros métodos: crear pedido directo
     setError(""); setCargando(true);
-
-    const body = {
-      empresa_id:        EMPRESA_ID,
-      cliente_id:        sesion.id,
-      metodo_pago_id:    Number(pedidoData.metodo_pago_id),
-      direccion_entrega: pedidoData.direccion_entrega,
-      notas:             pedidoData.notas || "",
-      total,
-      items: items.map((i) => ({
-        producto_id:     i.id,
-        kilos:           i.kilos,
-        precio_unitario: i.precio,
-      })),
-    };
-
+    const body = buildPedidoBody(sesion);
     const res = await crearPedido(body, sesion.token);
     setCargando(false);
     if (res.error) return setError(res.error);
     onExito(res);
   };
+
+  const handlePagoExitoso = async (paymentIntentId) => {
+    const sesion = leerSesion();
+    if (!sesion) {
+      setError("Sesión expirada.");
+      setPaso("auth");
+      return;
+    }
+
+    setCargando(true);
+    const body = { ...buildPedidoBody(sesion), stripe_payment_intent_id: paymentIntentId };
+    const res = await crearPedido(body, sesion.token);
+    setCargando(false);
+    if (res.error) {
+      setError(res.error);
+      setPaso("pedido");
+      return;
+    }
+    onExito(res);
+  };
+
+  const buildPedidoBody = (sesion) => ({
+    empresa_id:        EMPRESA_ID,
+    cliente_id:        sesion.id,
+    metodo_pago_id:    Number(pedidoData.metodo_pago_id),
+    direccion_entrega: pedidoData.direccion_entrega,
+    notas:             pedidoData.notas || "",
+    total,
+    items: items.map((i) => ({
+      producto_id:     i.id,
+      kilos:           i.kilos,
+      precio_unitario: i.precio,
+    })),
+  });
 
   const cerrarSesion = () => {
     localStorage.removeItem("cliente");
@@ -124,17 +161,22 @@ export default function ModalPedido({ items, total, onCerrar, onExito }) {
     setError("");
   };
 
+  const tituloPaso = {
+    auth:   "Identifícate para continuar",
+    pedido: "Confirmar pedido",
+    pago:   "Pago con tarjeta",
+  }[paso];
+
   return (
     <div style={s.overlay} onClick={onCerrar}>
       <div style={s.modal} onClick={(e) => e.stopPropagation()}>
         <div style={s.header}>
-          <span style={s.headerTitle}>
-            {paso === "auth" ? "Identifícate para continuar" : "Confirmar pedido"}
-          </span>
+          <span style={s.headerTitle}>{tituloPaso}</span>
           <button style={s.cerrarBtn} onClick={onCerrar}>✕</button>
         </div>
 
         <div style={s.body}>
+          {/* ── PASO AUTH ── */}
           {paso === "auth" && (
             <>
               <div style={s.tabs}>
@@ -182,6 +224,7 @@ export default function ModalPedido({ items, total, onCerrar, onExito }) {
             </>
           )}
 
+          {/* ── PASO PEDIDO ── */}
           {paso === "pedido" && (
             <>
               <div style={s.clienteInfo}>
@@ -222,10 +265,30 @@ export default function ModalPedido({ items, total, onCerrar, onExito }) {
                   onChange={(v) => setPedidoData({ ...pedidoData, notas: v })} />
                 {error && <p style={s.error}>{error}</p>}
                 <button style={s.btnPrimary} onClick={handlePedido} disabled={cargando}>
-                  {cargando ? "Enviando pedido…" : `Confirmar pedido · ${formatPrecio(total)}`}
+                  {cargando
+                    ? "Procesando…"
+                    : esMetodoTarjeta()
+                    ? `Continuar al pago · ${formatPrecio(total)}`
+                    : `Confirmar pedido · ${formatPrecio(total)}`}
                 </button>
               </div>
             </>
+          )}
+
+          {/* ── PASO PAGO STRIPE ── */}
+          {paso === "pago" && clientSecret && (
+            <PagoStripe
+              clientSecret={clientSecret}
+              total={total}
+              onExito={handlePagoExitoso}
+              onVolver={() => { setPaso("pedido"); setError(""); }}
+            />
+          )}
+
+          {cargando && paso === "pago" && (
+            <p style={{ textAlign: "center", color: "#64748b", fontSize: 13 }}>
+              Confirmando pedido…
+            </p>
           )}
         </div>
       </div>
