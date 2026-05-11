@@ -11,7 +11,8 @@ export const crearPedido = async (req, res) => {
       direccion_entrega,
       notas,
       total,
-      items
+      items,
+      stripe_payment_intent_id
     } = req.body;
 
     // 🔥 VALIDACIÓN REAL (ESTO EVITA "pedido inválido")
@@ -32,6 +33,9 @@ export const crearPedido = async (req, res) => {
 
     await client.query("BEGIN");
 
+    // Si el pago ya fue confirmado por Stripe, el pedido arranca en "en preparacion"
+    const estadoInicial = stripe_payment_intent_id ? "en preparacion" : "pendiente";
+
     // 🔥 1. CREAR PEDIDO
     const pedidoResult = await client.query(
       `
@@ -44,7 +48,7 @@ export const crearPedido = async (req, res) => {
         total,
         estado
       )
-      VALUES ($1,$2,$3,$4,$5,$6,'pendiente')
+      VALUES ($1,$2,$3,$4,$5,$6,$7)
       RETURNING id
       `,
       [
@@ -53,7 +57,8 @@ export const crearPedido = async (req, res) => {
         metodo_pago_id,
         direccion_entrega,
         notas || "",
-        total
+        total,
+        estadoInicial
       ]
     );
 

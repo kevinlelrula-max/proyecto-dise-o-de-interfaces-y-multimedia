@@ -6,6 +6,8 @@ export default function FormProducto({ producto, onClose, onSave }) {
   const [form, setForm] = useState({
     nombre: "",
     precio: "",
+    precio_costo: "",
+    porcentaje_ganancia: "",
     stock: "",
     categoria_id: 1,
   });
@@ -15,7 +17,12 @@ export default function FormProducto({ producto, onClose, onSave }) {
 
   useEffect(() => {
     if (producto) {
-      setForm(producto);
+      // Calcular el porcentaje de ganancia desde precio y costo si existen
+      let pct = "";
+      if (producto.precio > 0 && producto.precio_costo > 0) {
+        pct = (((producto.precio - producto.precio_costo) / producto.precio_costo) * 100).toFixed(1);
+      }
+      setForm({ ...producto, porcentaje_ganancia: pct });
       if (producto.imagen_url) {
         setImagenPreview(`${API_BASE}${producto.imagen_url}`);
       }
@@ -23,7 +30,21 @@ export default function FormProducto({ producto, onClose, onSave }) {
   }, [producto]);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    const next = { ...form, [name]: value };
+
+    // Recalcular precio de venta cuando cambia costo o porcentaje
+    const costo = Number(name === "precio_costo" ? value : next.precio_costo);
+    const pct   = Number(name === "porcentaje_ganancia" ? value : next.porcentaje_ganancia);
+
+    if (costo > 0 && pct > 0) {
+      next.precio = Math.round(costo * (1 + pct / 100)).toString();
+    } else if (name === "precio_costo" || name === "porcentaje_ganancia") {
+      // Si borraron alguno, limpiar precio calculado solo si no lo escribieron a mano
+      if (costo <= 0 || pct <= 0) next.precio = "";
+    }
+
+    setForm(next);
   };
 
   const handleImagen = (e) => {
@@ -37,10 +58,11 @@ export default function FormProducto({ producto, onClose, onSave }) {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("nombre",      form.nombre);
-    formData.append("precio",      form.precio);
-    formData.append("stock",       form.stock);
-    formData.append("categoria_id",form.categoria_id);
+    formData.append("nombre",       form.nombre);
+    formData.append("precio",       form.precio);
+    formData.append("precio_costo", form.precio_costo || "");
+    formData.append("stock",        form.stock);
+    formData.append("categoria_id", form.categoria_id);
     if (imagenFile) {
       formData.append("imagen", imagenFile);
     }
@@ -56,28 +78,89 @@ export default function FormProducto({ producto, onClose, onSave }) {
         <form onSubmit={handleSubmit}>
           <input
             name="nombre"
-            placeholder="Nombre"
+            placeholder="Nombre del producto"
             value={form.nombre}
             onChange={handleChange}
             style={styles.input}
+            required
           />
 
-          <input
-            name="precio"
-            placeholder="Precio"
-            type="number"
-            value={form.precio}
-            onChange={handleChange}
-            style={styles.input}
-          />
+          {/* Precio costo + % ganancia en la misma fila */}
+          <div style={styles.row2}>
+            <div style={styles.fieldWrap}>
+              <label style={styles.fieldLabel}>Precio costo (COP)</label>
+              <input
+                name="precio_costo"
+                placeholder="0"
+                type="number"
+                min="0"
+                value={form.precio_costo}
+                onChange={handleChange}
+                style={styles.input}
+              />
+            </div>
+            <div style={styles.fieldWrap}>
+              <label style={styles.fieldLabel}>% Ganancia</label>
+              <input
+                name="porcentaje_ganancia"
+                placeholder="ej: 30"
+                type="number"
+                min="0"
+                max="999"
+                value={form.porcentaje_ganancia}
+                onChange={handleChange}
+                style={styles.input}
+              />
+            </div>
+          </div>
+
+          {/* Precio de venta calculado automáticamente */}
+          <div style={styles.fieldWrap}>
+            <label style={styles.fieldLabel}>
+              Precio de venta (COP)
+              {form.precio_costo && form.porcentaje_ganancia && (
+                <span style={styles.autoTag}>calculado automáticamente</span>
+              )}
+            </label>
+            <input
+              name="precio"
+              placeholder="Se calcula con costo + %"
+              type="number"
+              min="0"
+              value={form.precio}
+              onChange={handleChange}
+              style={{
+                ...styles.input,
+                background: form.precio_costo && form.porcentaje_ganancia ? "#f0f7f4" : "#fff",
+                fontWeight: 700,
+                color: "#0F6E56",
+              }}
+              required
+            />
+          </div>
+
+          {/* Resumen de ganancia */}
+          {Number(form.precio) > 0 && Number(form.precio_costo) > 0 && (
+            <div style={styles.gananciaBox}>
+              <span style={styles.gananciaLabel}>Ganancia por unidad</span>
+              <span style={{
+                ...styles.gananciaValor,
+                color: Number(form.precio) >= Number(form.precio_costo) ? "#0F6E56" : "#dc2626"
+              }}>
+                ${(Number(form.precio) - Number(form.precio_costo)).toLocaleString("es-CO")} COP
+              </span>
+            </div>
+          )}
 
           <input
             name="stock"
             placeholder="Stock (kg)"
             type="number"
+            min="0"
             value={form.stock}
             onChange={handleChange}
             style={styles.input}
+            required
           />
 
           {/* ✅ Campo de imagen */}
@@ -135,14 +218,38 @@ const styles = {
   },
   modal: {
     background: "white", padding: "24px",
-    borderRadius: "14px", width: "320px",
+    borderRadius: "14px", width: "420px",
     display: "flex", flexDirection: "column", gap: 8,
+    maxHeight: "90vh", overflowY: "auto",
   },
   input: {
     width: "100%", padding: "8px 12px",
     border: "1.5px solid #eee", borderRadius: 8,
     fontSize: 14, marginBottom: 8,
     boxSizing: "border-box",
+  },
+  row2: {
+    display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10,
+    marginBottom: 4,
+  },
+  fieldWrap: { display: "flex", flexDirection: "column" },
+  fieldLabel: {
+    fontSize: 11, fontWeight: 600, color: "#64748b",
+    textTransform: "uppercase", letterSpacing: "0.04em",
+    marginBottom: 4,
+  },
+  gananciaBox: {
+    display: "flex", justifyContent: "space-between", alignItems: "center",
+    background: "#f0f7f4", borderRadius: 8, padding: "8px 12px",
+    marginBottom: 8,
+  },
+  gananciaLabel: { fontSize: 12, color: "#64748b", fontWeight: 500 },
+  gananciaValor: { fontSize: 13, fontWeight: 700 },
+  autoTag: {
+    marginLeft: 8, fontSize: 10, fontWeight: 600,
+    color: "#0F6E56", background: "#E1F5EE",
+    padding: "1px 7px", borderRadius: 999,
+    verticalAlign: "middle",
   },
   imagenWrap: {
     display: "flex", flexDirection: "column", alignItems: "center", gap: 6,

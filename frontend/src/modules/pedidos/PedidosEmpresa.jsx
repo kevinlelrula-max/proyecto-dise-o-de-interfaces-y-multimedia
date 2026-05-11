@@ -40,6 +40,30 @@ function formatFecha(f) {
   });
 }
 
+// Determina si el pago ya está confirmado
+function pagoConfirmado(pedido) {
+  const metodo = (pedido.metodo_pago || "").toLowerCase();
+  if (metodo.includes("tarjeta")) return true;        // Stripe lo confirma automáticamente
+  return pedido.estado !== "pendiente";               // La empresa lo confirmó manualmente
+}
+
+function PagoBadge({ pedido }) {
+  const confirmado = pagoConfirmado(pedido);
+  const metodo = (pedido.metodo_pago || "").toLowerCase();
+  const esTarjeta = metodo.includes("tarjeta");
+
+  if (confirmado) {
+    return (
+      <span style={s.pagoBadgeOk}>
+        {esTarjeta ? "💳 Pagado" : "✅ Verificado"}
+      </span>
+    );
+  }
+  return (
+    <span style={s.pagoBadgePendiente}>⏳ Sin confirmar</span>
+  );
+}
+
 export default function PedidosEmpresa() {
   const [pedidos, setPedidos]         = useState([]);
   const [filtro, setFiltro]           = useState("todos");
@@ -192,7 +216,10 @@ export default function PedidosEmpresa() {
                 <span style={{ ...s.td, flex: 2, color: "#64748b", fontSize: 12 }}>
                   {p.direccion_entrega}
                 </span>
-                <span style={{ ...s.td, flex: 1, fontSize: 12 }}>{p.metodo_pago || "—"}</span>
+                <span style={{ ...s.td, flex: 1, fontSize: 12, display: "flex", flexDirection: "column", gap: 4 }}>
+                  {p.metodo_pago || "—"}
+                  <PagoBadge pedido={p} />
+                </span>
                 <span style={{ ...s.td, flex: 1, fontWeight: 700 }}>{formatPrecio(p.total)}</span>
                 <span style={{ ...s.td, flex: 1 }}>
                   <span style={{ ...s.estadoBadge, background: col.bg, color: col.text, border: `1px solid ${col.border}` }}>
@@ -286,7 +313,15 @@ export default function PedidosEmpresa() {
               {/* Método de pago */}
               <div style={s.detailSection}>
                 <p style={s.sectionLabel}>Método de pago</p>
-                <p style={s.detailVal}>{seleccionado.metodo_pago || "—"}</p>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <p style={{ ...s.detailVal, margin: 0 }}>{seleccionado.metodo_pago || "—"}</p>
+                  <PagoBadge pedido={seleccionado} />
+                </div>
+                {!pagoConfirmado(seleccionado) && (
+                  <p style={s.pagoAviso}>
+                    ⚠️ Este pedido aún no tiene pago confirmado. Al avanzar el estado confirmas que recibiste el pago.
+                  </p>
+                )}
               </div>
 
               {/* Notas */}
@@ -379,4 +414,22 @@ const s = {
   totalRow: { display: "flex", justifyContent: "space-between", alignItems: "center", background: "#f0f7f4", borderRadius: 10, padding: "12px 16px", border: "1px solid #c8e6dc" },
   totalLabel: { fontSize: 14, fontWeight: 700, color: "#0B1628" },
   totalVal: { fontSize: 22, fontWeight: 800, color: "#0F6E56" },
+
+  pagoBadgeOk: {
+    display: "inline-block", fontSize: 10, fontWeight: 700,
+    padding: "2px 8px", borderRadius: 999,
+    background: "#dcfce7", color: "#166534",
+    border: "1px solid #bbf7d0",
+  },
+  pagoBadgePendiente: {
+    display: "inline-block", fontSize: 10, fontWeight: 700,
+    padding: "2px 8px", borderRadius: 999,
+    background: "#fef9c3", color: "#854d0e",
+    border: "1px solid #fde68a",
+  },
+  pagoAviso: {
+    fontSize: 12, color: "#92400e", background: "#fef3c7",
+    border: "1px solid #fde68a", borderRadius: 8,
+    padding: "8px 12px", margin: "6px 0 0",
+  },
 };

@@ -6,7 +6,8 @@ import {
   CartesianGrid, PieChart, Pie, Cell, Legend
 } from "recharts";
 
-const COLORS = ["#2563eb", "#7c3aed", "#f59e0b", "#ef4444", "#0e7490", "#be185d"];
+// Paleta monocromática verde — consistente con el branding
+const COLORS = ["#0F6E56", "#1A9070", "#34b48a", "#5ecba1", "#90dbb8", "#bfedd3"];
 
 const Reportes = () => {
   const [data, setData] = useState([]);
@@ -91,7 +92,7 @@ const Reportes = () => {
       <div style={s.statsRow}>
         <div style={s.statCard}>
           <span style={s.statLabel}>Total unidades vendidas</span>
-          <span style={{ ...s.statValue, color: "#2563eb" }}>{totalVendido}</span>
+          <span style={{ ...s.statValue, color: "#0F6E56" }}>{totalVendido}</span>
         </div>
         <div style={s.statCard}>
           <span style={s.statLabel}>Productos con ventas</span>
@@ -126,11 +127,7 @@ const Reportes = () => {
               />
               <YAxis tick={{ fontSize: 11, fill: "#94a3b8" }} />
               <Tooltip content={<CustomTooltipBar />} />
-              <Bar dataKey="total_vendido" radius={[8, 8, 0, 0]}>
-                {data.map((_, i) => (
-                  <Cell key={i} fill={COLORS[i % COLORS.length]} />
-                ))}
-              </Bar>
+              <Bar dataKey="total_vendido" radius={[8, 8, 0, 0]} fill="#0F6E56" />
             </BarChart>
           </ResponsiveContainer>
         </div>

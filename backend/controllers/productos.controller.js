@@ -58,19 +58,18 @@ export const getProductos = async (req, res) => {
 // =========================
 export const crearProducto = async (req, res) => {
   try {
-    const { nombre, precio, stock, categoria_id } = req.body;
+    const { nombre, precio, stock, categoria_id, precio_costo } = req.body;
     const empresa_id = req.user.empresa_id;
 
-    // Si viene una imagen subida, guardar la ruta
     const imagen_url = req.file
       ? `/uploads/productos/${req.file.filename}`
       : null;
 
     const result = await pool.query(
-      `INSERT INTO productos (nombre, precio, stock, categoria_id, empresa_id, imagen_url)
-       VALUES ($1, $2, $3, $4, $5, $6)
+      `INSERT INTO productos (nombre, precio, stock, categoria_id, empresa_id, imagen_url, precio_costo)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
        RETURNING *`,
-      [nombre, precio, stock, categoria_id, empresa_id, imagen_url]
+      [nombre, precio, stock, categoria_id, empresa_id, imagen_url, precio_costo || null]
     );
 
     res.json(result.rows[0]);
@@ -85,29 +84,27 @@ export const crearProducto = async (req, res) => {
 export const actualizarProducto = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre, precio, stock, categoria_id } = req.body;
+    const { nombre, precio, stock, categoria_id, precio_costo } = req.body;
     const empresa_id = req.user.empresa_id;
 
-    // Si viene imagen nueva, usarla; si no, conservar la que ya tiene
-    let imagen_url_query;
     let params;
+    let query;
 
     if (req.file) {
-      imagen_url_query = ", imagen_url = $5";
-      params = [nombre, precio, stock, categoria_id, `/uploads/productos/${req.file.filename}`, id, empresa_id];
+      params = [nombre, precio, stock, categoria_id, precio_costo || null, `/uploads/productos/${req.file.filename}`, id, empresa_id];
+      query = `UPDATE productos
+               SET nombre=$1, precio=$2, stock=$3, categoria_id=$4, precio_costo=$5, imagen_url=$6
+               WHERE id=$7 AND empresa_id=$8
+               RETURNING *`;
     } else {
-      imagen_url_query = "";
-      params = [nombre, precio, stock, categoria_id, id, empresa_id];
+      params = [nombre, precio, stock, categoria_id, precio_costo || null, id, empresa_id];
+      query = `UPDATE productos
+               SET nombre=$1, precio=$2, stock=$3, categoria_id=$4, precio_costo=$5
+               WHERE id=$6 AND empresa_id=$7
+               RETURNING *`;
     }
 
-    const result = await pool.query(
-      `UPDATE productos
-       SET nombre = $1, precio = $2, stock = $3, categoria_id = $4${imagen_url_query}
-       WHERE id = ${req.file ? "$6" : "$5"} AND empresa_id = ${req.file ? "$7" : "$6"}
-       RETURNING *`,
-      params
-    );
-
+    const result = await pool.query(query, params);
     res.json(result.rows[0]);
   } catch (error) {
     res.status(500).json({ error: "Error al actualizar producto" });

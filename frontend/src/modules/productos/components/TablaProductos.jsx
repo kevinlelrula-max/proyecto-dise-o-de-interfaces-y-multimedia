@@ -27,7 +27,14 @@ export default function TablaProductos({ productos, onEliminar, onEditar, vista 
                 onError={(e) => { e.target.src = IMG_PLACEHOLDER; }}
               />
               <span style={styles.listName}>{p.nombre}</span>
-              <span style={styles.listPrice}>{formatearPrecio(p.precio)}</span>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", minWidth: 100 }}>
+                <span style={styles.listPrice}>{formatearPrecio(p.precio)}</span>
+                {p.precio_costo > 0 && (
+                  <span style={{ fontSize: 11, color: "#0F6E56", fontWeight: 600 }}>
+                    +{formatearPrecio(p.precio - p.precio_costo)}
+                  </span>
+                )}
+              </div>
               <span style={{ ...styles.badge, ...stockColor }}>
                 Stock: {p.stock}
               </span>
@@ -62,6 +69,17 @@ export default function TablaProductos({ productos, onEliminar, onEditar, vista 
             <div style={styles.cardBody}>
               <p style={styles.cardName}>{p.nombre}</p>
               <p style={styles.cardPrice}>{formatearPrecio(p.precio)}</p>
+              {p.precio_costo > 0 && (
+                <div style={styles.costoRow}>
+                  <span style={styles.costoLabel}>Costo: {formatearPrecio(p.precio_costo)}</span>
+                  <span style={{
+                    ...styles.ganancia,
+                    color: p.precio >= p.precio_costo ? "#0F6E56" : "#dc2626"
+                  }}>
+                    +{formatearPrecio(p.precio - p.precio_costo)}
+                  </span>
+                </div>
+              )}
               <div style={styles.cardActions}>
                 <button style={styles.editBtn} onClick={() => onEditar(p)}>Editar</button>
                 <button style={styles.deleteBtn} onClick={() => onEliminar(p.id)}> Eliminar</button>
@@ -137,8 +155,14 @@ const styles = {
     fontSize: "15px",
     fontWeight: "700",
     color: "#0F6E56",
-    marginBottom: "10px",
+    marginBottom: "4px",
   },
+  costoRow: {
+    display: "flex", justifyContent: "space-between", alignItems: "center",
+    marginBottom: "8px",
+  },
+  costoLabel: { fontSize: "11px", color: "#94a3b8", fontWeight: 500 },
+  ganancia: { fontSize: "11px", fontWeight: 700 },
   cardActions: {
     display: "flex",
     gap: "6px",
