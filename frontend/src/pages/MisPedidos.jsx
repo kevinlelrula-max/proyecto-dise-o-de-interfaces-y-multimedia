@@ -4,6 +4,17 @@ import PedidoCard from "../modules/tienda/components/PedidoCard";
 
 function leerSesion() {
   try {
+    // Formato principal (LoginCliente.jsx)
+    const token = localStorage.getItem("cliente_token");
+    const id    = localStorage.getItem("cliente_id");
+    if (token && id) {
+      return {
+        token,
+        id:     Number(id),
+        nombre: localStorage.getItem("cliente_nombre") || "",
+      };
+    }
+    // Fallback formato antiguo
     const raw = localStorage.getItem("cliente");
     if (!raw) return null;
     const parsed = JSON.parse(raw);
@@ -104,6 +115,9 @@ export default function MisPedidos() {
 function Navbar({ navigate, sesion }) {
   const cerrarSesion = () => {
     localStorage.removeItem("cliente");
+    localStorage.removeItem("cliente_token");
+    localStorage.removeItem("cliente_id");
+    localStorage.removeItem("cliente_nombre");
     navigate("/tienda");
   };
 
@@ -125,12 +139,17 @@ function Navbar({ navigate, sesion }) {
 
         <div style={n.actions}>
           <button style={n.btnGhost} onClick={() => navigate("/tienda")}>
-            ← Volver al catálogo
+            ← Catálogo
           </button>
           {sesion && (
-            <button style={n.btnSalir} onClick={cerrarSesion}>
-              Salir
-            </button>
+            <>
+              <button style={n.btnGhost} onClick={() => navigate("/tienda/perfil")}>
+                👤 Mi perfil
+              </button>
+              <button style={n.btnSalir} onClick={cerrarSesion}>
+                Salir
+              </button>
+            </>
           )}
         </div>
       </div>

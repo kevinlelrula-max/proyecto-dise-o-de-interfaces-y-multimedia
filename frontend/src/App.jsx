@@ -18,6 +18,7 @@ import LoginCliente from "./pages/LoginCliente";
 import RegistroCliente from "./pages/RegistroCliente";
 import Tienda from "./pages/Tienda"; // ✅ IMPORTANTE (créalo si no existe)
 import MisPedidos from "./pages/MisPedidos";
+import PerfilCliente from "./modules/tienda/perfil/PerfilCliente";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
         <Route path="/tienda/login" element={<LoginCliente />} />
         <Route path="/tienda/registro" element={<RegistroCliente />} />
         <Route path="/tienda/mis-pedidos" element={<MisPedidos />} />
+        <Route path="/tienda/perfil" element={<PerfilCliente />} />
 
         {/* 🔁 Redirección opcional */}
         {/* Si alguien entra a algo raro dentro de tienda */}

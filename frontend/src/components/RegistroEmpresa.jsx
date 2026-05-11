@@ -118,10 +118,16 @@ export default function RegistroEmpresa() {
           </div>
 
           <div style={s.leftFooter}>
-            <p style={s.leftFooterText}>¿Ya tienes cuenta?</p>
+            <p style={s.leftFooterText}>¿Ya tienes cuenta de empresa?</p>
             <button style={s.leftBtn} onClick={() => navigate("/empresa/login")}>
-              Iniciar sesión →
+              Acceso empresa →
             </button>
+            <div style={s.clienteBox}>
+              <span style={s.clienteBoxText}>¿Eres cliente?</span>
+              <button style={s.clienteBoxLink} onClick={() => navigate("/tienda")}>
+                Ir a la tienda →
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -297,6 +303,9 @@ const s = {
   leftFooter: {},
   leftFooterText: { fontSize: "13px", color: "rgba(255,255,255,0.45)", marginBottom: "8px" },
   leftBtn: { background: "transparent", border: "1px solid rgba(255,255,255,0.25)", color: "rgba(255,255,255,0.8)", borderRadius: "8px", padding: "8px 16px", fontSize: "13px", cursor: "pointer", fontWeight: "500" },
+  clienteBox: { marginTop: "12px", padding: "10px 14px", backgroundColor: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.25)", borderRadius: "8px", display: "flex", justifyContent: "space-between", alignItems: "center" },
+  clienteBoxText: { fontSize: "12px", color: "rgba(255,255,255,0.6)" },
+  clienteBoxLink: { background: "none", border: "none", color: "#34d399", fontSize: "12px", fontWeight: "700", cursor: "pointer" },
   right: { flex: 1, backgroundColor: "#f8fafc", display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 40px", overflowY: "auto" },
   formWrap: { width: "100%", maxWidth: "520px" },
   formHeader: { marginBottom: "28px" },

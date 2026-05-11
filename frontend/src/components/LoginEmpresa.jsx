@@ -166,10 +166,10 @@ export default function LoginEmpresa() {
             {loading ? "Verificando..." : "Iniciar sesión"}
           </button>
 
-          <p style={s.registerText}>
-            ¿Tu empresa aún no está registrada?{" "}
-            <a href="/registroempresa" style={s.registerLink}>Crear cuenta</a>
-          </p>
+          <div style={s.clienteBox}>
+            <span style={s.clienteBoxText}>¿Eres cliente y quieres comprar?</span>
+            <a href="/tienda" style={s.clienteBoxLink}>Ir a la tienda →</a>
+          </div>
 
         </div>
       </div>
@@ -380,5 +380,27 @@ const s = {
     color: "#2563eb",
     fontWeight: "600",
     textDecoration: "none",
+  },
+  clienteBox: {
+    marginTop: "16px",
+    padding: "12px 16px",
+    backgroundColor: "#f0fdf4",
+    border: "1px solid #bbf7d0",
+    borderRadius: "10px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: "8px",
+  },
+  clienteBoxText: {
+    fontSize: "13px",
+    color: "#166534",
+  },
+  clienteBoxLink: {
+    fontSize: "13px",
+    fontWeight: "700",
+    color: "#0F6E56",
+    textDecoration: "none",
+    whiteSpace: "nowrap",
   },
 };

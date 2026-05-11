@@ -6,7 +6,10 @@ import {
   actualizarCliente,
   eliminarCliente,
   loginCliente,
-  registrarClientePublico
+  registrarClientePublico,
+  getPerfilCliente,
+  actualizarPerfilCliente,
+  cambiarPasswordCliente,
 } from "../controllers/clientes.controller.js";
 import { verificarToken } from "../middlewares/auth.middleware.js";
 
@@ -19,6 +22,9 @@ router.get("/",       verificarToken, getClientes);
 router.post("/",      verificarToken, crearCliente);
 router.put("/:id",    verificarToken, actualizarCliente);
 router.delete("/:id", verificarToken, eliminarCliente);
-router.post("/login", loginCliente);
-router.post("/registro", registrarClientePublico);
+router.post("/login",            loginCliente);
+router.post("/registro",         registrarClientePublico);
+router.get("/perfil",            verificarToken, getPerfilCliente);
+router.put("/perfil",            verificarToken, actualizarPerfilCliente);
+router.put("/perfil/password",   verificarToken, cambiarPasswordCliente);
 export default router;

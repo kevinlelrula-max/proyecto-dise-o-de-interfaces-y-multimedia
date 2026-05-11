@@ -138,6 +138,13 @@ export default function Tienda() {
                   📦 Mis pedidos
                 </button>
 
+                <button
+                  style={s.navBtnGhost}
+                  onClick={() => navigate("/tienda/perfil")}
+                >
+                  👤 Mi perfil
+                </button>
+
                 <div style={s.navUser}>
                   <div style={s.navAvatar}>
                     {clienteNombre?.[0]?.toUpperCase() ?? "C"}

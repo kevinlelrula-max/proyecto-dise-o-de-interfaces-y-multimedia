@@ -195,10 +195,9 @@ export default function Home() {
             <a href="#how" style={n.navLink}>Cómo funciona</a>
             {/* ── NUEVO: acceso a la tienda ── */}
             <button onClick={() => navigate("/tienda")} style={n.btnTienda}>
-              🛒 Tienda
+              🛒 Ir a la tienda
             </button>
-            <button onClick={() => navigate("/empresa/login")} style={n.btnOutline}>Iniciar sesión</button>
-            <button onClick={() => navigate("/empresa/registro")} style={n.btnPrimary}>Registrarse gratis</button>
+            <button onClick={() => navigate("/empresa/login")} style={n.btnOutline}>Acceso empresa</button>
           </div>
         </div>
       </nav>
@@ -217,18 +216,17 @@ export default function Home() {
 
             {/* CTAs empresa */}
             <div style={h.ctas}>
-              <button onClick={() => navigate("/empresa/registro")} style={h.ctaPrimary}>Crear cuenta gratis →</button>
-              <button onClick={() => navigate("/empresa/login")} style={h.ctaSecondary}>Iniciar sesión</button>
+              <button onClick={() => navigate("/empresa/login")} style={h.ctaPrimary}>Acceso empresa →</button>
             </div>
 
-            {/* ── NUEVO: separador + acceso tienda ── */}
+            {/* Separador cliente */}
             <div style={h.divider}>
               <span style={h.dividerLine} />
-              <span style={h.dividerText}>¿eres cliente?</span>
+              <span style={h.dividerText}>¿eres cliente y quieres comprar?</span>
               <span style={h.dividerLine} />
             </div>
             <button onClick={() => navigate("/tienda")} style={h.ctaTienda}>
-              🛒 Ver marketplace de empresas →
+              🛒 Ir a la tienda online →
             </button>
 
             <div style={h.trust}>
@@ -493,8 +491,8 @@ export default function Home() {
           <h2 style={ct.title}>¿Listo para transformar tu empresa?</h2>
           <p style={ct.subtitle}>Únete a cientos de empresas que ya gestionan su negocio con FishWare.</p>
           <div style={ct.btns}>
-            <button onClick={() => navigate("/empresa/registro")} style={ct.btnPrimary}>Crear cuenta gratis</button>
-            <button onClick={() => navigate("/empresa/login")} style={ct.btnOutline}>Ya tengo cuenta</button>
+            <button onClick={() => navigate("/empresa/login")} style={ct.btnPrimary}>Acceso empresa</button>
+            <button onClick={() => navigate("/tienda")} style={ct.btnOutline}>🛒 Ir a la tienda</button>
           </div>
         </motion.div>
       </section>

@@ -130,8 +130,14 @@ export default function DashboardEmpresa() {
   const navigate      = useNavigate();
   const token         = localStorage.getItem("token");
   const decoded       = decodeToken(token);
-  const rolId         = decoded?.rol_id || 3;
+  const rolId         = decoded?.rol_id;
   const nombreUsuario = decoded?.usuario || "Usuario";
+
+  // 🔒 Protección de ruta: si no hay token válido de empresa, redirigir al login
+  if (!token || !decoded || !rolId || rolId === 4) {
+    navigate("/empresa/login");
+    return null;
+  }
 
   const menu = TODO_EL_MENU.filter(item =>
     (PERMISOS[rolId] || []).includes(item.key)

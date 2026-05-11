@@ -187,6 +187,64 @@ export const loginCliente = async (req, res) => {
 
 // Reemplaza SOLO la función registrarClientePublico en tu clientes.controller.js
 
+export const getPerfilCliente = async (req, res) => {
+  try {
+    const id = req.user.id;
+    const result = await pool.query(
+      `SELECT id, nombre, apellido, usuario, telefono, direccion FROM persona WHERE id = $1 AND rol_id = 4`,
+      [id]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: "Cliente no encontrado" });
+    res.json(result.rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: "Error al obtener perfil" });
+  }
+};
+
+export const actualizarPerfilCliente = async (req, res) => {
+  try {
+    const id = req.user.id;
+    const { nombre, apellido, telefono, direccion } = req.body;
+
+    const result = await pool.query(
+      `UPDATE persona SET nombre=$1, apellido=$2, telefono=$3, direccion=$4
+       WHERE id=$5 AND rol_id=4 RETURNING id, nombre, apellido, usuario, telefono, direccion`,
+      [nombre, apellido, telefono || null, direccion || null, id]
+    );
+    res.json(result.rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: "Error al actualizar perfil" });
+  }
+};
+
+export const cambiarPasswordCliente = async (req, res) => {
+  try {
+    const id = req.user.id;
+    const { contrasena_actual, contrasena_nueva } = req.body;
+
+    if (!contrasena_actual || !contrasena_nueva)
+      return res.status(400).json({ error: "Faltan campos obligatorios" });
+
+    if (contrasena_nueva.length < 6)
+      return res.status(400).json({ error: "La contraseña debe tener al menos 6 caracteres" });
+
+    const result = await pool.query(
+      `SELECT contrasena FROM persona WHERE id=$1 AND rol_id=4`, [id]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: "Cliente no encontrado" });
+
+    const match = await bcrypt.compare(contrasena_actual, result.rows[0].contrasena);
+    if (!match) return res.status(401).json({ error: "La contraseña actual es incorrecta" });
+
+    const hash = await bcrypt.hash(contrasena_nueva, 10);
+    await pool.query(`UPDATE persona SET contrasena=$1 WHERE id=$2`, [hash, id]);
+
+    res.json({ ok: true, mensaje: "Contraseña actualizada correctamente" });
+  } catch (error) {
+    res.status(500).json({ error: "Error al cambiar contraseña" });
+  }
+};
+
 export const registrarClientePublico = async (req, res) => {
   try {
     const {
