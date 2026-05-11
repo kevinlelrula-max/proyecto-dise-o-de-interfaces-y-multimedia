@@ -11,7 +11,7 @@ import Configuracion from "../modules/configuracion/Configuracion";
 import PedidosEmpresa from "../modules/pedidos/PedidosEmpresa";
 import Integraciones from "../modules/integraciones/Integraciones";
 
-const BASE_URL = import.meta.env.VITE_API_URL || `${import.meta.env.VITE_API_URL || "http://localhost:3000"}`;
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 const PERMISOS = {
   1: ["productos", "clientes", "ventas", "reportes", "usuarios", "pos", "configuracion", "pedidos", "integraciones"],

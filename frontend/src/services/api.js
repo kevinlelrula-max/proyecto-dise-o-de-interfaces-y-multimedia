@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // ✅ Usa variable de entorno en producción, localhost en desarrollo
-const API_URL = `${import.meta.env.VITE_API_URL || `${import.meta.env.VITE_API_URL || "http://localhost:3000"}`}/api`;
+const API_URL = `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/api`;
 
 // =========================
 // 🔹 REGISTRO USUARIO

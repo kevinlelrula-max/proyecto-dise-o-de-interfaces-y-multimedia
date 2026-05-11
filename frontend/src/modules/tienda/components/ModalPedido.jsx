@@ -12,10 +12,25 @@ function formatPrecio(p) {
 }
 
 function guardarSesion(data) {
+  // Guardar en ambos formatos para que el navbar y el modal estén sincronizados
   localStorage.setItem("cliente", JSON.stringify(data));
+  localStorage.setItem("cliente_token", data.token);
+  localStorage.setItem("cliente_id", data.id);
+  localStorage.setItem("cliente_nombre", data.nombre || data.usuario || "");
 }
 function leerSesion() {
   try {
+    // Primero intentar con el formato del LoginCliente.jsx (cliente_token)
+    const token = localStorage.getItem("cliente_token");
+    const id    = localStorage.getItem("cliente_id");
+    if (token && id) {
+      return {
+        token,
+        id:     Number(id),
+        nombre: localStorage.getItem("cliente_nombre") || "",
+      };
+    }
+    // Fallback: formato antiguo (objeto JSON en "cliente")
     const raw = localStorage.getItem("cliente");
     if (!raw) return null;
     const parsed = JSON.parse(raw);
@@ -156,6 +171,9 @@ export default function ModalPedido({ items, total, onCerrar, onExito }) {
 
   const cerrarSesion = () => {
     localStorage.removeItem("cliente");
+    localStorage.removeItem("cliente_token");
+    localStorage.removeItem("cliente_id");
+    localStorage.removeItem("cliente_nombre");
     setCliente(null);
     setPaso("auth");
     setError("");
