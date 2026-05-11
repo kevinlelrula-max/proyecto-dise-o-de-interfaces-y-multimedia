@@ -507,9 +507,9 @@ export default function Home() {
               <path d="M26 18h6l-3-4 3-4h-6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               <circle cx="14" cy="15" r="1.5" fill="white"/>
             </svg>
-            <span style={fo.brandName}>FishWare</span>
+            <span style={fo.brandName}>WareFish</span>
           </div>
-          <span style={fo.copy}>© 2026 FishWare · Plataforma empresarial</span>
+          <span style={fo.copy}>© 2026 WareFish · Plataforma empresarial</span>
         </div>
       </footer>
     </div>
