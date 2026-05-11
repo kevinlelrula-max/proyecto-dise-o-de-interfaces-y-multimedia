@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(ls -la \"C:\\\\Users\\\\kevin\\\\Downloads\\\\fishware \\(diseño de interfaces y multimedia\\)\\\\\" | head -20)"
-    ]
-  }
-}
