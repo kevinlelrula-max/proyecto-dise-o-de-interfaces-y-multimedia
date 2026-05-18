@@ -1,25 +1,36 @@
 import pool from "../config/db.js";
 import multer from "multer";
-import path from "path";
-import fs from "fs";
+import { v2 as cloudinary } from "cloudinary";
+import { Readable } from "stream";
+
+// =========================
+// CONFIGURACIÓN CLOUDINARY
+// =========================
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key:    process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Sube un buffer a Cloudinary y devuelve la URL segura
+function subirACloudinary(buffer, mimetype) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: "fishware/productos", resource_type: "image" },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result.secure_url);
+      }
+    );
+    Readable.from(buffer).pipe(stream);
+  });
+}
 
 // =========================
 // CONFIGURACIÓN DE MULTER
 // =========================
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const dir = "uploads/productos";
-    // Crear carpeta si no existe
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    const nombre = `producto_${Date.now()}${ext}`;
-    cb(null, nombre);
-  }
-});
-
+// memoryStorage: guarda el archivo en RAM temporalmente
+// el buffer se envía a Cloudinary y luego se descarta
 const fileFilter = (req, file, cb) => {
   const tiposPermitidos = ["image/jpeg", "image/png", "image/webp"];
   if (tiposPermitidos.includes(file.mimetype)) {
@@ -30,9 +41,9 @@ const fileFilter = (req, file, cb) => {
 };
 
 export const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   fileFilter,
-  limits: { fileSize: 3 * 1024 * 1024 } // 3MB máximo
+  limits: { fileSize: 3 * 1024 * 1024 }, // 3MB máximo
 });
 
 // =========================
@@ -61,9 +72,10 @@ export const crearProducto = async (req, res) => {
     const { nombre, precio, stock, categoria_id, precio_costo } = req.body;
     const empresa_id = req.user.empresa_id;
 
-    const imagen_url = req.file
-      ? `/uploads/productos/${req.file.filename}`
-      : null;
+    let imagen_url = null;
+    if (req.file) {
+      imagen_url = await subirACloudinary(req.file.buffer, req.file.mimetype);
+    }
 
     const result = await pool.query(
       `INSERT INTO productos (nombre, precio, stock, categoria_id, empresa_id, imagen_url, precio_costo)
@@ -74,6 +86,7 @@ export const crearProducto = async (req, res) => {
 
     res.json(result.rows[0]);
   } catch (error) {
+    console.error("Error al crear producto:", error);
     res.status(500).json({ error: "Error al crear producto" });
   }
 };
@@ -91,7 +104,8 @@ export const actualizarProducto = async (req, res) => {
     let query;
 
     if (req.file) {
-      params = [nombre, precio, stock, categoria_id, precio_costo || null, `/uploads/productos/${req.file.filename}`, id, empresa_id];
+      const imagen_url = await subirACloudinary(req.file.buffer, req.file.mimetype);
+      params = [nombre, precio, stock, categoria_id, precio_costo || null, imagen_url, id, empresa_id];
       query = `UPDATE productos
                SET nombre=$1, precio=$2, stock=$3, categoria_id=$4, precio_costo=$5, imagen_url=$6
                WHERE id=$7 AND empresa_id=$8
@@ -107,6 +121,7 @@ export const actualizarProducto = async (req, res) => {
     const result = await pool.query(query, params);
     res.json(result.rows[0]);
   } catch (error) {
+    console.error("Error al actualizar producto:", error);
     res.status(500).json({ error: "Error al actualizar producto" });
   }
 };
@@ -125,10 +140,8 @@ export const eliminarProducto = async (req, res) => {
       [id, empresa_id]
     );
 
-    if (prod.rows[0]?.imagen_url) {
-      const filePath = `.${prod.rows[0].imagen_url}`;
-      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-    }
+    // Con Cloudinary las imágenes se gestionan desde su dashboard
+    // No es necesario borrar archivos locales
 
     await pool.query(
       "DELETE FROM productos WHERE id = $1 AND empresa_id = $2",
