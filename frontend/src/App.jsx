@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { ToastProvider } from "./contexts/ToastContext";
 import Home from "./pages/Home";
 
 // Empresas
@@ -16,12 +17,15 @@ import Reportes from "./pages/Reportes";
 // Tienda cliente
 import LoginCliente from "./pages/LoginCliente";
 import RegistroCliente from "./pages/RegistroCliente";
-import Tienda from "./pages/Tienda"; // ✅ IMPORTANTE (créalo si no existe)
+import TiendaInicio from "./pages/TiendaInicio";
+import Tienda from "./pages/Tienda";
+import TiendaContacto from "./pages/TiendaContacto";
 import MisPedidos from "./pages/MisPedidos";
 import PerfilCliente from "./modules/tienda/perfil/PerfilCliente";
 
 function App() {
   return (
+    <ToastProvider>
     <BrowserRouter>
       <Routes>
 
@@ -39,21 +43,20 @@ function App() {
         <Route path="/reportes" element={<Reportes />} />
 
         {/* ── Tienda cliente ── */}
-        <Route path="/tienda" element={<Tienda />} /> {/* ✅ YA NO DA ERROR */}
+        <Route path="/tienda" element={<TiendaInicio />} />
+        <Route path="/tienda/catalogo" element={<Tienda />} />
+        <Route path="/tienda/contacto" element={<TiendaContacto />} />
         <Route path="/tienda/login" element={<LoginCliente />} />
         <Route path="/tienda/registro" element={<RegistroCliente />} />
         <Route path="/tienda/mis-pedidos" element={<MisPedidos />} />
         <Route path="/tienda/perfil" element={<PerfilCliente />} />
-
-        {/* 🔁 Redirección opcional */}
-        {/* Si alguien entra a algo raro dentro de tienda */}
-        <Route path="/tienda/*" element={<Navigate to="/tienda" />} />
 
         {/* 🚫 Ruta fallback global */}
         <Route path="*" element={<h1>404 - Página no encontrada</h1>} />
 
       </Routes>
     </BrowserRouter>
+    </ToastProvider>
   );
 }
 

@@ -231,7 +231,7 @@ function getStrengthColor(pwd, segment) {
   if (score === 1) return "#ef4444";
   if (score === 2) return "#f59e0b";
   if (score === 3) return "#3b82f6";
-  return "#0F6E56";
+  return "#3674B5";
 }
 
 function getStrengthLabel(pwd) {
@@ -267,7 +267,7 @@ const s = {
   avatarWrap: { position: "relative", flexShrink: 0 },
   avatar: {
     width: "56px", height: "56px", borderRadius: "50%",
-    backgroundColor: "#2563eb", color: "white",
+    backgroundColor: "#3674B5", color: "white",
     fontSize: "18px", fontWeight: "800",
     display: "flex", alignItems: "center", justifyContent: "center",
   },
@@ -281,7 +281,7 @@ const s = {
   profileUser: { fontSize: "13px", color: "#64748b", margin: 0 },
   profileBadge: {
     padding: "4px 12px", borderRadius: "999px",
-    backgroundColor: "#E1F5EE", color: "#0F6E56",
+    backgroundColor: "#EEF4FF", color: "#3674B5",
     fontSize: "12px", fontWeight: "600",
   },
 
@@ -311,9 +311,9 @@ const s = {
   cardSubtitle: { fontSize: "12px", color: "#94a3b8", margin: 0 },
 
   successBox: {
-    backgroundColor: "#E1F5EE", border: "1px solid #9FE1CB",
+    backgroundColor: "#EEF4FF", border: "1px solid #bfdbfe",
     borderRadius: "10px", padding: "10px 14px",
-    fontSize: "13px", color: "#0F6E56", fontWeight: "500",
+    fontSize: "13px", color: "#3674B5", fontWeight: "500",
   },
 
   // Campos
@@ -355,7 +355,7 @@ const s = {
   // Botones
   btnPrimary: {
     width: "100%", padding: "12px",
-    backgroundColor: "#2563eb", color: "white",
+    backgroundColor: "#3674B5", color: "white",
     border: "none", borderRadius: "10px",
     fontSize: "14px", fontWeight: "700", cursor: "pointer",
   },

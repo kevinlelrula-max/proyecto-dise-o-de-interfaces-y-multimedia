@@ -10,16 +10,20 @@ import PuntoDeVenta from "../modules/pos/PuntoDeVenta";
 import Configuracion from "../modules/configuracion/Configuracion";
 import PedidosEmpresa from "../modules/pedidos/PedidosEmpresa";
 import Integraciones from "../modules/integraciones/Integraciones";
+import Mensajes from "../modules/mensajes/Mensajes";
+import Inicio from "../modules/inicio/Inicio";
+import { useNotificaciones } from "../hooks/useNotificaciones";
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 const PERMISOS = {
-  1: ["productos", "clientes", "ventas", "reportes", "usuarios", "pos", "configuracion", "pedidos", "integraciones"],
-  2: ["productos", "clientes", "ventas", "reportes", "usuarios", "pos", "configuracion", "pedidos", "integraciones"],
-  3: ["pos", "clientes", "pedidos"],
+  1: ["inicio", "productos", "clientes", "ventas", "reportes", "usuarios", "pos", "configuracion", "pedidos", "integraciones", "mensajes"],
+  2: ["inicio", "productos", "clientes", "ventas", "reportes", "usuarios", "pos", "configuracion", "pedidos", "integraciones", "mensajes"],
+  3: ["inicio", "pos", "clientes", "pedidos"],
 };
 
 const TODO_EL_MENU = [
+  { key: "inicio",         label: "Inicio",          icon: InicioIcon },
   { key: "productos",      label: "Productos",       icon: ProductosIcon },
   { key: "clientes",       label: "Clientes",        icon: ClientesIcon },
   { key: "pedidos",        label: "Pedidos online",  icon: PedidosIcon },
@@ -28,6 +32,7 @@ const TODO_EL_MENU = [
   { key: "usuarios",       label: "Usuarios",        icon: UsuariosIcon },
   { key: "pos",            label: "Punto de venta",  icon: PosIcon },
   { key: "integraciones",  label: "Integraciones",   icon: IntegracionesIcon },
+  { key: "mensajes",       label: "Mensajes",         icon: MensajesIcon },
 ];
 
 function decodeToken(token) {
@@ -36,6 +41,14 @@ function decodeToken(token) {
 }
 
 // ── Íconos SVG ──────────────────────────────────────────────────────────────
+function InicioIcon({ active }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={active ? "#fff" : "#7A8BA0"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+  );
+}
 function ProductosIcon({ active }) {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={active ? "#fff" : "#7A8BA0"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -109,6 +122,13 @@ function IntegracionesIcon({ active }) {
     </svg>
   );
 }
+function MensajesIcon({ active }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={active ? "#fff" : "#7A8BA0"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+  );
+}
 function BellIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -145,8 +165,10 @@ export default function DashboardEmpresa() {
 
   const [seccion, setSeccion]             = useState(menu[0]?.key || "pos");
   const [open, setOpen]                   = useState(false);
+  const [openNotif, setOpenNotif]         = useState(false);
   const [logoUrl, setLogoUrl]             = useState(null);
   const [nombreEmpresa, setNombreEmpresa] = useState("FishWare");
+  const { notificaciones, total: totalNotif, recargar: recargarNotif } = useNotificaciones();
 
   useEffect(() => {
     if (!token) return;
@@ -171,13 +193,13 @@ export default function DashboardEmpresa() {
     return () => window.removeEventListener("configuracion:guardada", onConfigGuardada);
   }, []);
 
-  // Cerrar dropdown al hacer clic fuera
+  // Cerrar dropdowns al hacer clic fuera
   useEffect(() => {
-    if (!open) return;
-    const close = () => setOpen(false);
+    if (!open && !openNotif) return;
+    const close = () => { setOpen(false); setOpenNotif(false); };
     document.addEventListener("click", close);
     return () => document.removeEventListener("click", close);
-  }, [open]);
+  }, [open, openNotif]);
 
   const irA = (key) => {
     if ((PERMISOS[rolId] || []).includes(key)) setSeccion(key);
@@ -430,14 +452,12 @@ export default function DashboardEmpresa() {
         }
 
         .fw-notif-dot {
-          width: 7px;
-          height: 7px;
-          background: #00C9A7;
-          border-radius: 50%;
+          background: #ef4444;
+          border-radius: 999px;
           position: absolute;
-          top: 7px;
-          right: 7px;
+          color: white;
           border: 1.5px solid #F0F4F8;
+          line-height: 1;
         }
 
         .fw-user-btn {
@@ -560,6 +580,13 @@ export default function DashboardEmpresa() {
           min-height: calc(100vh - 108px);
           overflow: hidden;
         }
+
+        .fw-content-transparent {
+          background: transparent !important;
+          border: none !important;
+          box-shadow: none !important;
+          padding: 0 !important;
+        }
       `}</style>
 
       <div className="fw-shell">
@@ -586,7 +613,7 @@ export default function DashboardEmpresa() {
 
           <nav className="fw-sb-nav">
             <div className="fw-sb-section">Principal</div>
-            {menu.filter(i => ["productos","clientes","pedidos","ventas","reportes","integraciones"].includes(i.key)).map(item => {
+            {menu.filter(i => ["inicio","productos","clientes","pedidos","ventas","reportes","integraciones","mensajes"].includes(i.key)).map(item => {
               const Icon = item.icon;
               const active = seccion === item.key;
               return (
@@ -641,9 +668,109 @@ export default function DashboardEmpresa() {
             </div>
 
             <div className="fw-topbar-right">
-              <div className="fw-notif-btn">
+              <div
+                className="fw-notif-btn"
+                style={{ position: "relative" }}
+                onClick={e => { e.stopPropagation(); setOpenNotif(v => !v); setOpen(false); }}
+              >
                 <BellIcon />
-                <div className="fw-notif-dot" />
+                {totalNotif > 0 && (
+                  <div className="fw-notif-dot" style={{
+                    width: "auto", minWidth: "16px", height: "16px",
+                    padding: "0 4px", borderRadius: "999px",
+                    fontSize: "9px", fontWeight: "700",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    top: "5px", right: "5px",
+                  }}>
+                    {totalNotif > 9 ? "9+" : totalNotif}
+                  </div>
+                )}
+
+                {openNotif && (
+                  <div
+                    onClick={e => e.stopPropagation()}
+                    style={{
+                      position: "absolute", top: "calc(100% + 10px)", right: 0,
+                      width: "340px", background: "white", borderRadius: "14px",
+                      border: "1px solid rgba(0,0,0,0.08)",
+                      boxShadow: "0 12px 40px rgba(0,0,0,0.15)",
+                      zIndex: 200, overflow: "hidden",
+                    }}
+                  >
+                    {/* Header */}
+                    <div style={{ padding: "14px 18px", borderBottom: "1px solid #f1f5f9", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <span style={{ fontSize: "14px", fontWeight: "700", color: "#0B1628" }}>Notificaciones</span>
+                      {totalNotif > 0 && (
+                        <span style={{ fontSize: "11px", fontWeight: "700", backgroundColor: "#EEF4FF", color: "#3674B5", padding: "2px 8px", borderRadius: "999px" }}>
+                          {totalNotif} nueva{totalNotif !== 1 ? "s" : ""}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Lista */}
+                    <div style={{ maxHeight: "380px", overflowY: "auto" }}>
+                      {notificaciones.length === 0 ? (
+                        <div style={{ padding: "32px 18px", textAlign: "center", color: "#94a3b8", fontSize: "13px" }}>
+                          <span style={{ fontSize: "28px", display: "block", marginBottom: "8px" }}>🎉</span>
+                          Todo al día, sin pendientes
+                        </div>
+                      ) : notificaciones.map((n, i) => {
+                        const meta = {
+                          mensaje:      { icon: "✉️", color: "#1e40af", bg: "#eff6ff",  seccion: "mensajes"  },
+                          pedido:       { icon: "📦", color: "#3674B5", bg: "#EEF4FF",  seccion: "pedidos"   },
+                          pedido_lento: { icon: "🕐", color: "#b45309", bg: "#fffbeb",  seccion: "pedidos"   },
+                          cancelado:    { icon: "❌", color: "#991b1b", bg: "#fef2f2",  seccion: "pedidos"   },
+                          sin_stock:    { icon: "🚨", color: "#991b1b", bg: "#fef2f2",  seccion: "productos" },
+                          stock:        { icon: "⚠️", color: "#b45309", bg: "#fffbeb",  seccion: "productos" },
+                        }[n.tipo] || { icon: "🔔", color: "#64748b", bg: "#f1f5f9", seccion: "productos" };
+
+                        return (
+                          <button
+                            key={i}
+                            onClick={() => { setOpenNotif(false); irA(meta.seccion); }}
+                            style={{
+                              width: "100%", display: "flex", alignItems: "flex-start", gap: "12px",
+                              padding: "12px 18px", background: "none", border: "none",
+                              borderBottom: "1px solid #f8fafc", cursor: "pointer", textAlign: "left",
+                              transition: "background 0.1s",
+                            }}
+                            onMouseEnter={e => e.currentTarget.style.background = "#f8fafc"}
+                            onMouseLeave={e => e.currentTarget.style.background = "none"}
+                          >
+                            <div style={{
+                              width: "34px", height: "34px", borderRadius: "9px", flexShrink: 0,
+                              backgroundColor: meta.bg, display: "flex", alignItems: "center",
+                              justifyContent: "center", fontSize: "15px",
+                            }}>
+                              {meta.icon}
+                            </div>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <p style={{ fontSize: "13px", fontWeight: "600", color: "#0B1628", marginBottom: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                                {n.titulo}
+                              </p>
+                              <p style={{ fontSize: "11px", color: "#64748b" }}>{n.descripcion}</p>
+                            </div>
+                            <span style={{ fontSize: "10px", color: "#94a3b8", flexShrink: 0, marginTop: "2px", color: meta.color, fontWeight: "700" }}>
+                              →
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Footer */}
+                    {notificaciones.length > 0 && (
+                      <div style={{ padding: "10px 18px", borderTop: "1px solid #f1f5f9", display: "flex", justifyContent: "flex-end" }}>
+                        <button
+                          onClick={() => { recargarNotif(); }}
+                          style={{ fontSize: "12px", color: "#3674B5", background: "none", border: "none", cursor: "pointer", fontWeight: "600" }}
+                        >
+                          ↻ Actualizar
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div
@@ -696,7 +823,8 @@ export default function DashboardEmpresa() {
 
           {/* CONTENIDO */}
           <div className="fw-content">
-            <div className="fw-content-card">
+            <div className={`fw-content-card${seccion === "inicio" ? " fw-content-transparent" : ""}`}>
+              {seccion === "inicio"        && <Inicio onNavegar={irA} usuario={nombreUsuario} />}
               {seccion === "productos"     && <Productos />}
               {seccion === "clientes"      && <Clientes />}
               {seccion === "pedidos"        && <PedidosEmpresa />}
@@ -706,6 +834,7 @@ export default function DashboardEmpresa() {
               {seccion === "usuarios"      && <Usuarios />}
               {seccion === "pos"           && <PuntoDeVenta />}
               {seccion === "configuracion" && <Configuracion />}
+              {seccion === "mensajes"      && <Mensajes />}
             </div>
           </div>
         </main>

@@ -77,7 +77,7 @@ const s = {
   clienteInfo: { display: "flex", alignItems: "center", gap: "12px" },
   avatar: {
     width: "36px", height: "36px", borderRadius: "50%",
-    backgroundColor: "#eff6ff", color: "#2563eb",
+    backgroundColor: "#EEF4FF", color: "#3674B5",
     fontSize: "12px", fontWeight: "700",
     display: "flex", alignItems: "center", justifyContent: "center",
     flexShrink: 0,
@@ -90,8 +90,8 @@ const s = {
   actions: { display: "flex", gap: "6px", justifyContent: "center" },
   editBtn: {
     padding: "6px 12px", fontSize: "12px", fontWeight: "600",
-    border: "1.5px solid #2563eb", borderRadius: "8px",
-    backgroundColor: "transparent", color: "#2563eb", cursor: "pointer",
+    border: "1.5px solid #3674B5", borderRadius: "8px",
+    backgroundColor: "transparent", color: "#3674B5", cursor: "pointer",
   },
   deleteBtn: {
     padding: "6px 12px", fontSize: "12px", fontWeight: "600",

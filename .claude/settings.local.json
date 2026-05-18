@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python \"C:\\\\Users\\\\kevin\\\\AppData\\\\Roaming\\\\Claude\\\\local-agent-mode-sessions\\\\skills-plugin\\\\4a86de3f-2fb6-48f4-b6da-e6a3d2ca0965\\\\1ad1b76c-ef00-47be-ada5-f8a67b4cba5c\\\\skills\\\\pptx\\\\scripts\\\\extract-text\" \"C:\\\\Users\\\\kevin\\\\Downloads\\\\WareFish \\(1\\).pptx\")",
+      "WebFetch(domain:render.com)",
+      "WebFetch(domain:fly.io)",
+      "WebFetch(domain:www.digitalocean.com)",
+      "WebSearch",
+      "Bash(python fishware_dos_planes.py)",
+      "Bash(python \"C:\\\\Users\\\\kevin\\\\AppData\\\\Roaming\\\\Claude\\\\local-agent-mode-sessions\\\\skills-plugin\\\\4a86de3f-2fb6-48f4-b6da-e6a3d2ca0965\\\\1ad1b76c-ef00-47be-ada5-f8a67b4cba5c\\\\skills\\\\xlsx\\\\scripts\\\\recalc.py\" \"C:\\\\Users\\\\kevin\\\\Downloads\\\\Fishware - Plan CP Railway.xlsx\")",
+      "Bash(python \"C:\\\\Users\\\\kevin\\\\AppData\\\\Roaming\\\\Claude\\\\local-agent-mode-sessions\\\\skills-plugin\\\\4a86de3f-2fb6-48f4-b6da-e6a3d2ca0965\\\\1ad1b76c-ef00-47be-ada5-f8a67b4cba5c\\\\skills\\\\xlsx\\\\scripts\\\\recalc.py\" \"C:\\\\Users\\\\kevin\\\\Downloads\\\\Fishware - Plan LP AWS.xlsx\")",
+      "Bash(\"C:/Users/kevin/AppData/Local/Programs/Python/Python313/python.exe\" fishware_simple.py)",
+      "WebFetch(domain:aws.amazon.com)",
+      "WebFetch(domain:instances.vantage.sh)",
+      "WebFetch(domain:cloudprice.net)",
+      "WebFetch(domain:sendgrid.com)",
+      "WebFetch(domain:cloudinary.com)",
+      "WebFetch(domain:www.twilio.com)",
+      "WebFetch(domain:aws-pricing.com)",
+      "WebFetch(domain:www.oreateai.com)",
+      "WebFetch(domain:www.shopify.com)",
+      "WebFetch(domain:komercia.co)",
+      "WebFetch(domain:komercia.com.pe)",
+      "WebFetch(domain:elsasto.com)",
+      "Bash(\"C:/Users/kevin/AppData/Local/Programs/Python/Python313/python.exe\" fishware_ia.py)",
+      "Bash(python fishware_ia.py)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\kevin\\\\fishware\" -Recurse -Directory)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(Sort-Object)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\kevin\\\\fishware\" -Depth 2 -Force)",
+      "Bash(Select-Object Mode, Name, FullName)",
+      "Bash(Format-Table -AutoSize)",
+      "Bash(node -e ' *)",
+      "Bash(cat \"/mnt/c/Users/kevin/fishware/backend/routes/reporteEmpresa.routes.js\")",
+      "Bash(set PGPASSWORD=Uccestudiante1.)",
+      "Bash(psql -h localhost -U postgres -d proyectogrado -f scripts/migrar_referidos.sql)",
+      "PowerShell($env:PGPASSWORD = \"Uccestudiante1.\"; & psql -h localhost -U postgres -d proyectogrado -f \"C:\\\\Users\\\\kevin\\\\fishware\\\\backend\\\\scripts\\\\migrar_referidos.sql\" 2>&1)",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}

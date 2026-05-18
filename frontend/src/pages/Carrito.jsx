@@ -130,9 +130,9 @@ export default function Carrito({
                         key={m.id}
                         style={{
                           ...s.metodoBtn,
-                          backgroundColor: metodoPagoId === m.id ? "#E1F5EE" : "white",
-                          borderColor: metodoPagoId === m.id ? "#0F6E56" : "#e2e8f0",
-                          color: metodoPagoId === m.id ? "#0F6E56" : "#64748b",
+                          backgroundColor: metodoPagoId === m.id ? "#EEF4FF" : "white",
+                          borderColor: metodoPagoId === m.id ? "#3674B5" : "#e2e8f0",
+                          color: metodoPagoId === m.id ? "#3674B5" : "#64748b",
                           fontWeight: metodoPagoId === m.id ? "700" : "500",
                         }}
                         onClick={() => setMetodoPagoId(m.id)}
@@ -291,24 +291,24 @@ const s = {
   kilosBtn: {
     width: "22px", height: "22px", borderRadius: "6px",
     border: "1px solid #e2e8f0", backgroundColor: "white",
-    fontSize: "13px", cursor: "pointer", color: "#0F6E56",
+    fontSize: "13px", cursor: "pointer", color: "#3674B5",
     display: "flex", alignItems: "center", justifyContent: "center",
   },
   kilosVal: { fontSize: "12px", fontWeight: "600", color: "#0f172a", minWidth: "32px", textAlign: "center" },
   itemRight: { display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "4px", flexShrink: 0 },
-  itemSubtotal: { fontSize: "13px", fontWeight: "700", color: "#0F6E56", margin: 0 },
+  itemSubtotal: { fontSize: "13px", fontWeight: "700", color: "#3674B5", margin: 0 },
   quitarBtn: { background: "none", border: "none", cursor: "pointer", fontSize: "13px", padding: 0 },
 
   // Total
   totalRow: {
     display: "flex", justifyContent: "space-between", alignItems: "center",
     padding: "14px 16px",
-    backgroundColor: "#E1F5EE",
+    backgroundColor: "#EEF4FF",
     borderRadius: "12px",
-    border: "1px solid #9FE1CB",
+    border: "1px solid #bfdbfe",
   },
   totalLabel: { fontSize: "14px", fontWeight: "700", color: "#0f172a" },
-  totalValor: { fontSize: "20px", fontWeight: "800", color: "#0F6E56" },
+  totalValor: { fontSize: "20px", fontWeight: "800", color: "#3674B5" },
 
   // Formulario
   form: { display: "flex", flexDirection: "column", gap: "14px" },
@@ -346,7 +346,7 @@ const s = {
   },
   btnConfirmar: {
     width: "100%", padding: "13px",
-    backgroundColor: "#0F6E56", color: "white",
+    backgroundColor: "#3674B5", color: "white",
     border: "none", borderRadius: "10px",
     fontSize: "14px", fontWeight: "700",
     transition: "opacity 0.2s",

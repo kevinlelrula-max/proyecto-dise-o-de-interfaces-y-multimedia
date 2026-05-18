@@ -78,7 +78,7 @@ export default function PagoStripe({ clientSecret, total, onExito, onVolver }) {
     appearance: {
       theme: "stripe",
       variables: {
-        colorPrimary: "#0F6E56",
+        colorPrimary: "#3674B5",
         colorBackground: "#f8faf9",
         borderRadius: "10px",
         fontFamily: "'Inter', 'Segoe UI', sans-serif",
@@ -97,15 +97,15 @@ const s = {
   form: { display: "flex", flexDirection: "column", gap: 16 },
   infoBox: {
     display: "flex", justifyContent: "space-between", alignItems: "center",
-    background: "#f0f7f4", borderRadius: 12, padding: "12px 16px",
-    border: "1px solid #9FE1CB",
+    background: "#EEF4FF", borderRadius: 12, padding: "12px 16px",
+    border: "1px solid #bfdbfe",
   },
   infoLabel: { fontSize: 13, fontWeight: 600, color: "#374151" },
-  infoTotal: { fontSize: 20, fontWeight: 800, color: "#0F6E56" },
+  infoTotal: { fontSize: 20, fontWeight: 800, color: "#3674B5" },
   stripeWrap: { padding: "4px 0" },
   error: { fontSize: 13, color: "#ef4444", margin: 0, fontWeight: 500 },
   btnPagar: {
-    padding: "13px", background: "#0F6E56", color: "#fff",
+    padding: "13px", background: "#3674B5", color: "#fff",
     border: "none", borderRadius: 10, fontSize: 15,
     fontWeight: 700, cursor: "pointer", transition: "opacity 0.2s",
   },

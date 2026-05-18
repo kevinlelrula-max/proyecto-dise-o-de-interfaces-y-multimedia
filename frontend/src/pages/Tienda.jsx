@@ -3,11 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useProductosTienda } from "../modules/tienda/hooks/useProductosTienda";
 import { useCarrito } from "../modules/tienda/hooks/useCarrito";
 import CarritoPanel from "../modules/tienda/components/CarritoPanel";
+import logoWarefish from "../assets/logowarefish.png";
 import ModalPedido from "../modules/tienda/components/ModalPedido";
 
 // Colores de avatar por inicial
 const AVATAR_COLORS = [
-  { bg: "#E1F5EE", color: "#0F6E56" },
+  { bg: "#EEF4FF", color: "#3674B5" },
   { bg: "#eff6ff", color: "#1e40af" },
   { bg: "#f5f3ff", color: "#7c3aed" },
   { bg: "#fffbeb", color: "#b45309" },
@@ -93,16 +94,18 @@ export default function Tienda() {
 
           {/* BRAND */}
           <div style={s.navBrand} onClick={() => navigate("/")}>
-            <svg width="26" height="26" viewBox="0 0 36 36" fill="none">
-              <rect width="36" height="36" rx="9" fill="#0F6E56"/>
-              <path d="M8 18c0-5 4-9 9-9s9 4 9 9-4 9-9 9" stroke="white" strokeWidth="2.2" strokeLinecap="round"/>
-              <path d="M26 18h6l-3-4 3-4h-6" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-              <circle cx="14" cy="15" r="1.5" fill="white"/>
-            </svg>
+            <img src={logoWarefish} alt="WareFish Logo" style={{ width: 48, height: 48, objectFit: "contain" }} />
             <div>
               <span style={s.navBrandName}>WareFish</span>
               <span style={s.navBrandSub}>Tienda</span>
             </div>
+          </div>
+
+          {/* NAV LINKS */}
+          <div style={s.navLinks}>
+            <button style={s.navLink} onClick={() => navigate("/tienda")}>Inicio</button>
+            <button style={{ ...s.navLink, ...s.navLinkActive }}>Catálogo</button>
+            <button style={s.navLink} onClick={() => navigate("/tienda/contacto")}>Contacto</button>
           </div>
 
           {/* SEARCH */}
@@ -120,6 +123,8 @@ export default function Tienda() {
 
           {/* ACTIONS */}
           <div style={s.navActions}>
+
+            <button style={s.navBtnBack} onClick={() => navigate("/")}>← Sitio principal</button>
 
             {/* 🛒 CARRITO */}
             <button
@@ -178,16 +183,14 @@ export default function Tienda() {
       {/* ── HERO ── */}
       <div style={s.hero}>
         <div style={s.heroInner}>
-          <div style={s.heroBadge}>🛒 Tienda de productos</div>
+          <div style={s.heroBadge}>🛒 Catálogo de productos</div>
           <h1 style={s.heroTitle}>Compra pescado fresco</h1>
-          <p style={s.heroSubtitle}>
-            Directo desde productores, sin intermediarios.
-          </p>
+          <p style={s.heroSubtitle}>Directo desde productores, sin intermediarios.</p>
         </div>
       </div>
 
       {/* ── CONTENIDO ── */}
-      <div style={s.content}>
+      <div id="productos-section" style={s.content}>
 
         {cargando ? (
           <p style={{ color: "#64748b" }}>Cargando productos...</p>
@@ -342,6 +345,13 @@ const s = {
     textTransform: "uppercase",
     display: "block",
   },
+  navLinks: { display: "flex", alignItems: "center", gap: "4px", flexShrink: 0 },
+  navLink: {
+    padding: "6px 14px", background: "transparent", border: "none",
+    borderRadius: "8px", color: "rgba(255,255,255,0.75)", fontSize: "14px",
+    cursor: "pointer", fontWeight: "500",
+  },
+  navLinkActive: { color: "white", backgroundColor: "rgba(255,255,255,0.1)", fontWeight: "600" },
   navSearch: {
     flex: 1,
     display: "flex",
@@ -379,6 +389,7 @@ const s = {
     flexShrink: 0,
     marginLeft: "auto",
   },
+  navBtnBack: { padding: "6px 12px", background: "transparent", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "8px", color: "rgba(255,255,255,0.45)", fontSize: "12px", cursor: "pointer", fontWeight: "400" },
   navBtnGhost: {
     padding: "7px 14px",
     background: "transparent",
@@ -391,7 +402,7 @@ const s = {
   },
   navBtnPrimary: {
     padding: "7px 16px",
-    backgroundColor: "#0F6E56",
+    backgroundColor: "#3674B5",
     border: "none",
     borderRadius: "8px",
     color: "white",
@@ -408,7 +419,7 @@ const s = {
     width: "30px",
     height: "30px",
     borderRadius: "50%",
-    backgroundColor: "#0F6E56",
+    backgroundColor: "#3674B5",
     color: "white",
     fontSize: "12px",
     fontWeight: "700",
@@ -469,8 +480,49 @@ const s = {
     fontSize: "15px",
     color: "rgba(255,255,255,0.6)",
     lineHeight: "1.6",
-    maxWidth: "480px",
+    maxWidth: "560px",
+    marginBottom: "28px",
   },
+  heroBtns: { display: "flex", gap: "12px", marginBottom: "40px", flexWrap: "wrap" },
+  heroBtnPrimary: {
+    padding: "12px 28px", backgroundColor: "#3674B5", border: "none",
+    borderRadius: "10px", color: "white", fontSize: "15px", fontWeight: "600", cursor: "pointer",
+  },
+  heroBtnOutline: {
+    padding: "12px 28px", backgroundColor: "transparent",
+    border: "1px solid rgba(255,255,255,0.3)", borderRadius: "10px",
+    color: "white", fontSize: "15px", cursor: "pointer",
+  },
+  heroAccent: { color: "#34d399" },
+  heroStats: {
+    display: "flex", alignItems: "center", gap: "32px",
+    paddingTop: "32px", borderTop: "1px solid rgba(255,255,255,0.1)",
+  },
+  heroStat: { display: "flex", flexDirection: "column", gap: "4px" },
+  heroStatNum: { fontSize: "28px", fontWeight: "800", color: "white" },
+  heroStatLabel: { fontSize: "12px", color: "rgba(255,255,255,0.5)" },
+  heroStatDivider: { width: "1px", height: "40px", backgroundColor: "rgba(255,255,255,0.15)" },
+
+  // Contacto
+  contacto: {
+    backgroundColor: "#0f172a",
+    borderTop: "1px solid rgba(255,255,255,0.08)",
+    padding: "56px 32px 24px",
+    marginTop: "auto",
+  },
+  contactoInner: {
+    maxWidth: "1200px", margin: "0 auto",
+    display: "grid", gridTemplateColumns: "1.5fr 1fr 1fr",
+    gap: "48px", paddingBottom: "40px",
+    borderBottom: "1px solid rgba(255,255,255,0.08)",
+  },
+  contactoLeft: { display: "flex", flexDirection: "column" },
+  contactoTitle: { fontSize: "22px", fontWeight: "700", color: "white", marginBottom: "10px", letterSpacing: "-0.02em" },
+  contactoDesc: { fontSize: "14px", color: "rgba(255,255,255,0.5)", lineHeight: "1.7", maxWidth: "280px" },
+  contactoSubtitle: { fontSize: "14px", fontWeight: "700", color: "white", marginBottom: "16px", textTransform: "uppercase", letterSpacing: "0.08em" },
+  contactoInfo: { display: "flex", flexDirection: "column", gap: "12px" },
+  contactoItem: { display: "flex", alignItems: "flex-start", gap: "10px", fontSize: "13px", color: "rgba(255,255,255,0.6)", lineHeight: "1.5" },
+  contactoCopy: { maxWidth: "1200px", margin: "0 auto", paddingTop: "24px", fontSize: "12px", color: "rgba(255,255,255,0.3)", textAlign: "center" },
   heroGlow1: {
     position: "absolute", top: "-100px", right: "-100px",
     width: "400px", height: "400px", borderRadius: "50%",
@@ -595,14 +647,14 @@ const s = {
     gap: "5px",
     fontSize: "11px",
     fontWeight: "600",
-    color: "#0F6E56",
+    color: "#3674B5",
   },
   onlineDot: {
     width: "6px",
     height: "6px",
     borderRadius: "50%",
-    backgroundColor: "#0F6E56",
-    boxShadow: "0 0 0 2px rgba(15,110,86,0.2)",
+    backgroundColor: "#3674B5",
+    boxShadow: "0 0 0 2px rgba(54,116,181,0.2)",
   },
   cardBtn: {
     padding: "6px 14px",
@@ -642,7 +694,7 @@ const s = {
   emptyBtn: {
     marginTop: "8px",
     padding: "10px 20px",
-    backgroundColor: "#0F6E56",
+    backgroundColor: "#3674B5",
     color: "white",
     border: "none",
     borderRadius: "10px",
@@ -671,7 +723,7 @@ const s = {
   footerEmpresa: {
     background: "none",
     border: "none",
-    color: "#0F6E56",
+    color: "#3674B5",
     fontSize: "12px",
     fontWeight: "600",
     cursor: "pointer",

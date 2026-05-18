@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { loginCliente } from "../services/api"; // ajusta la ruta según tu proyecto
+import logoWarefish from "../assets/logowarefish.png";
 
 export default function LoginCliente() {
   const navigate = useNavigate();
@@ -53,12 +54,7 @@ export default function LoginCliente() {
 
           {/* Logo */}
           <div style={s.leftLogo}>
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-              <rect width="36" height="36" rx="10" fill="white" fillOpacity="0.15"/>
-              <path d="M8 18c0-5 4-9 9-9s9 4 9 9-4 9-9 9" stroke="white" strokeWidth="2.2" strokeLinecap="round"/>
-              <path d="M26 18h6l-3-4 3-4h-6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <circle cx="14" cy="15" r="1.5" fill="white"/>
-            </svg>
+            <img src={logoWarefish} alt="WareFish Logo" style={{ width: 72, height: 72, objectFit: "contain" }} />
             <span style={s.leftLogoText}>WareFish · Tienda</span>
           </div>
 
@@ -94,12 +90,7 @@ export default function LoginCliente() {
 
           <div style={s.formHeader}>
             <div style={s.formLogoSmall}>
-              <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
-                <rect width="36" height="36" rx="10" fill="#0F6E56"/>
-                <path d="M8 18c0-5 4-9 9-9s9 4 9 9-4 9-9 9" stroke="white" strokeWidth="2.2" strokeLinecap="round"/>
-                <path d="M26 18h6l-3-4 3-4h-6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <circle cx="14" cy="15" r="1.5" fill="white"/>
-              </svg>
+              <img src={logoWarefish} alt="WareFish Logo" style={{ width: 64, height: 64, objectFit: "contain" }} />
             </div>
             <h2 style={s.formTitle}>Bienvenido de nuevo</h2>
             <p style={s.formSubtitle}>Inicia sesión para ver tus pedidos y comprar</p>
@@ -254,11 +245,11 @@ const s = {
   input: { width: "100%", padding: "11px 40px 11px 38px", borderRadius: "10px", border: "1.5px solid #e2e8f0", fontSize: "14px", color: "#0f172a", backgroundColor: "white", outline: "none", boxSizing: "border-box", transition: "border-color 0.15s" },
   eyeBtn: { position: "absolute", right: "12px", background: "none", border: "none", cursor: "pointer", fontSize: "14px", padding: "0", lineHeight: 1 },
 
-  btnLogin: { width: "100%", padding: "13px", backgroundColor: "#0F6E56", color: "white", fontSize: "15px", fontWeight: "600", border: "none", borderRadius: "10px", cursor: "pointer", marginTop: "8px", marginBottom: "20px", letterSpacing: "0.01em", transition: "background 0.2s" },
+  btnLogin: { width: "100%", padding: "13px", backgroundColor: "#3674B5", color: "white", fontSize: "15px", fontWeight: "600", border: "none", borderRadius: "10px", cursor: "pointer", marginTop: "8px", marginBottom: "20px", letterSpacing: "0.01em", transition: "background 0.2s" },
 
   divider: { display: "flex", alignItems: "center", gap: "10px", marginBottom: "14px" },
   dividerLine: { flex: 1, height: "1px", backgroundColor: "#e2e8f0" },
   dividerText: { fontSize: "12px", color: "#94a3b8", whiteSpace: "nowrap" },
 
-  btnRegister: { width: "100%", padding: "12px", backgroundColor: "transparent", color: "#0F6E56", fontSize: "14px", fontWeight: "600", border: "1.5px solid #0F6E56", borderRadius: "10px", cursor: "pointer", transition: "all 0.2s" },
+  btnRegister: { width: "100%", padding: "12px", backgroundColor: "transparent", color: "#3674B5", fontSize: "14px", fontWeight: "600", border: "1.5px solid #3674B5", borderRadius: "10px", cursor: "pointer", transition: "all 0.2s" },
 };

@@ -1,4 +1,4 @@
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useParams, useLocation, useRef, useEffect, useState } from "react";
 import { useTiendaEmpresa } from "./useTiendaEmpresa";
 import CatalogoGrid from "./CatalogoGrid";
 import Carrito from "./Carrito";
@@ -29,6 +29,16 @@ export default function TiendaEmpresa() {
     estaLogueado, clienteNombre,
   } = useTiendaEmpresa(empresaId, empresaSlug);
 
+  // Animación del carrito al añadir items
+  const prevTotalItems = useRef(totalItems);
+  const [cartBumpKey, setCartBumpKey] = useState(0);
+  useEffect(() => {
+    if (totalItems > prevTotalItems.current) {
+      setCartBumpKey(k => k + 1);
+    }
+    prevTotalItems.current = totalItems;
+  }, [totalItems]);
+
   const handleCerrarSesion = () => {
     localStorage.removeItem("cliente_token");
     localStorage.removeItem("cliente_id");
@@ -38,6 +48,19 @@ export default function TiendaEmpresa() {
 
   return (
     <div style={s.page}>
+      <style>{`
+        @keyframes cartBump {
+          0%   { transform: scale(1); }
+          30%  { transform: scale(1.5); }
+          55%  { transform: scale(0.9); }
+          75%  { transform: scale(1.15); }
+          100% { transform: scale(1); }
+        }
+        @keyframes cartBtnPop {
+          0%   { box-shadow: 0 0 0 0px rgba(54,116,181,0.6); }
+          100% { box-shadow: 0 0 0 10px rgba(54,116,181,0); }
+        }
+      `}</style>
 
       {/* ── NAVBAR ── */}
       <nav style={s.nav}>
@@ -93,13 +116,21 @@ export default function TiendaEmpresa() {
             <button
               style={{
                 ...s.carritoBtn,
-                backgroundColor: carrito.length > 0 ? "#0F6E56" : "rgba(255,255,255,0.1)",
+                backgroundColor: carrito.length > 0 ? "#3674B5" : "rgba(255,255,255,0.1)",
               }}
               onClick={() => setCarritoAbierto(true)}
             >
               🛒
               {carrito.length > 0 && (
-                <span style={s.carritoBadge}>{carrito.length}</span>
+                <span
+                  key={cartBumpKey}
+                  style={{
+                    ...s.carritoBadge,
+                    animation: "cartBump 0.45s cubic-bezier(0.34,1.56,0.64,1) both",
+                  }}
+                >
+                  {carrito.length}
+                </span>
               )}
             </button>
           </div>
@@ -272,7 +303,7 @@ const s = {
     cursor: "pointer", fontWeight: "500",
   },
   navBtnPrimary: {
-    padding: "6px 14px", backgroundColor: "#0F6E56",
+    padding: "6px 14px", backgroundColor: "#3674B5",
     border: "none", borderRadius: "8px",
     color: "white", fontSize: "12px",
     cursor: "pointer", fontWeight: "600",
@@ -373,10 +404,10 @@ const s = {
   modalIcon: { fontSize: "52px", marginBottom: "16px" },
   modalTitle: { fontSize: "24px", fontWeight: "800", color: "#0f172a", marginBottom: "12px" },
   modalDesc: { fontSize: "14px", color: "#64748b", lineHeight: "1.6", marginBottom: "12px" },
-  modalTotal: { fontSize: "18px", color: "#0F6E56", marginBottom: "24px" },
+  modalTotal: { fontSize: "18px", color: "#3674B5", marginBottom: "24px" },
   modalBtn: {
     width: "100%", padding: "13px",
-    backgroundColor: "#0F6E56", color: "white",
+    backgroundColor: "#3674B5", color: "white",
     border: "none", borderRadius: "10px",
     fontSize: "15px", fontWeight: "700",
     cursor: "pointer", marginBottom: "10px",
@@ -397,7 +428,7 @@ const s = {
   footerText: { fontSize: "12px", color: "#94a3b8" },
   footerBack: {
     background: "none", border: "none",
-    color: "#0F6E56", fontSize: "12px",
+    color: "#3674B5", fontSize: "12px",
     fontWeight: "600", cursor: "pointer",
   },
 };

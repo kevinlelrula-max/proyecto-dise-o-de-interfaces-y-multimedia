@@ -126,7 +126,7 @@ function Navbar({ navigate, sesion }) {
       <div style={n.inner}>
         <div style={n.brand} onClick={() => navigate("/tienda")}>
           <svg width="26" height="26" viewBox="0 0 36 36" fill="none">
-            <rect width="36" height="36" rx="9" fill="#0F6E56"/>
+            <rect width="36" height="36" rx="9" fill="#3674B5"/>
             <path d="M8 18c0-5 4-9 9-9s9 4 9 9-4 9-9 9" stroke="white" strokeWidth="2.2" strokeLinecap="round"/>
             <path d="M26 18h6l-3-4 3-4h-6" stroke="white" strokeWidth="2" strokeLinecap="round"/>
             <circle cx="14" cy="15" r="1.5" fill="white"/>
@@ -210,23 +210,23 @@ const s = {
   ultimaVez: { color: "#94a3b8", fontWeight: 400 },
   btnRecargar: {
     padding: "8px 16px",
-    background: "#fff", border: "1px solid #d1e8e0",
+    background: "#fff", border: "1px solid #bfdbfe",
     borderRadius: 8, fontSize: 13, fontWeight: 600,
-    color: "#0F6E56", cursor: "pointer",
+    color: "#3674B5", cursor: "pointer",
   },
   pollingBanner: {
     display: "flex", alignItems: "center", gap: 8,
-    background: "#f0f7f4", border: "1px solid #d1e8e0",
+    background: "#EEF4FF", border: "1px solid #bfdbfe",
     borderRadius: 8, padding: "8px 14px", marginBottom: 24,
   },
   pollingDot: {
     width: 8, height: 8, borderRadius: "50%",
-    background: "#0F6E56",
-    boxShadow: "0 0 0 3px rgba(15,110,86,0.2)",
+    background: "#3674B5",
+    boxShadow: "0 0 0 3px rgba(54,116,181,0.2)",
     animation: "pulse 2s infinite",
     flexShrink: 0,
   },
-  pollingTexto: { fontSize: 12, color: "#0F6E56", fontWeight: 500 },
+  pollingTexto: { fontSize: 12, color: "#3674B5", fontWeight: 500 },
   lista: { display: "flex", flexDirection: "column" },
   centrado: {
     display: "flex", flexDirection: "column",
@@ -237,7 +237,7 @@ const s = {
   msgTexto: { fontSize: 14, color: "#64748b", margin: 0 },
   btnPrimary: {
     marginTop: 8, padding: "10px 24px",
-    background: "#0F6E56", color: "#fff",
+    background: "#3674B5", color: "#fff",
     border: "none", borderRadius: 10,
     fontSize: 14, fontWeight: 700, cursor: "pointer",
   },

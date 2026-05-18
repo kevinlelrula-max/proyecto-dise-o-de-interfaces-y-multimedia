@@ -1,7 +1,9 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import LogoEditor from "./LogoEditor";
 
 export default function EmpresaForm({ empresa, logoPreview, onChange, onLogoChange }) {
   const fileInputRef = useRef(null);
+  const [editorSrc, setEditorSrc] = useState(null);
 
   const campos = [
     { key: "nombre",    label: "Nombre de la empresa", tipo: "text",  full: true,  placeholder: "Pesquera Estrada" },
@@ -13,11 +15,28 @@ export default function EmpresaForm({ empresa, logoPreview, onChange, onLogoChan
 
   function handleFileChange(e) {
     const file = e.target.files?.[0];
-    if (file) onLogoChange(file);
+    if (!file) return;
+    e.target.value = "";
+    const reader = new FileReader();
+    reader.onload = (ev) => setEditorSrc(ev.target.result);
+    reader.readAsDataURL(file);
+  }
+
+  function handleEditorConfirm(editedFile) {
+    setEditorSrc(null);
+    onLogoChange(editedFile);
   }
 
   return (
     <div className="space-y-6">
+
+      {editorSrc && (
+        <LogoEditor
+          imageSrc={editorSrc}
+          onConfirm={handleEditorConfirm}
+          onCancel={() => setEditorSrc(null)}
+        />
+      )}
 
       {/* Logo */}
       <div className="bg-white rounded-2xl shadow-md p-6">
@@ -45,7 +64,7 @@ export default function EmpresaForm({ empresa, logoPreview, onChange, onLogoChan
           )}
 
           {logoPreview && (
-            <p className="text-xs text-cyan-500 mt-1">Haz clic para cambiar</p>
+            <p className="text-xs text-cyan-500 mt-1">Haz clic para cambiar y editar</p>
           )}
         </div>
 

@@ -244,10 +244,10 @@ const s = {
   claveLabel: { fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.06em" },
   claveValWrap: { display: "flex", alignItems: "center", gap: 8 },
   claveVal: { fontSize: 11, color: "#374151", background: "#f1f5f9", padding: "5px 10px", borderRadius: 7, fontFamily: "monospace", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
-  verBtn: { fontSize: 11, fontWeight: 600, color: "#0F6E56", background: "none", border: "none", cursor: "pointer", flexShrink: 0 },
+  verBtn: { fontSize: 11, fontWeight: 600, color: "#3674B5", background: "none", border: "none", cursor: "pointer", flexShrink: 0 },
 
   testRow: { display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" },
-  testBtn: { padding: "8px 16px", background: "#0F6E56", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" },
+  testBtn: { padding: "8px 16px", background: "#3674B5", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" },
   testResult: { fontSize: 12, fontWeight: 600, padding: "6px 12px", borderRadius: 8 },
 
   modoTest: { fontSize: 11, color: "#64748b", margin: 0, background: "#fffbeb", padding: "8px 12px", borderRadius: 8, border: "1px solid #fde68a" },

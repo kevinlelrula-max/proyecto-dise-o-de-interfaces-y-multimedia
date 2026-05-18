@@ -81,7 +81,7 @@ export default function Usuarios() {
           <div style={s.statsRow}>
             <div style={s.statCard}>
               <span style={s.statLabel}>Total usuarios</span>
-              <span style={{ ...s.statValue, color: "#2563eb" }}>{usuarios.length}</span>
+              <span style={{ ...s.statValue, color: "#3674B5" }}>{usuarios.length}</span>
             </div>
             <div style={s.statCard}>
               <span style={s.statLabel}>Administradores</span>
@@ -154,7 +154,7 @@ const s = {
   headerLeft: { display: "flex", alignItems: "center", gap: "10px" },
   headerTitle: { fontSize: "20px", fontWeight: "700", color: "#0f172a", margin: 0 },
   btnNew: {
-    padding: "9px 20px", backgroundColor: "#2563eb",
+    padding: "9px 20px", backgroundColor: "#3674B5",
     color: "white", border: "none", borderRadius: "10px",
     cursor: "pointer", fontSize: "14px", fontWeight: "600",
   },
@@ -167,7 +167,7 @@ const s = {
     transition: "all 0.15s", marginBottom: "-2px",
     display: "flex", alignItems: "center", gap: "6px",
   },
-  tabActive: { color: "#2563eb", borderBottomColor: "#2563eb" },
+  tabActive: { color: "#3674B5", borderBottomColor: "#3674B5" },
 
   statsRow: { display: "flex", gap: "12px", marginBottom: "20px" },
   statCard: {

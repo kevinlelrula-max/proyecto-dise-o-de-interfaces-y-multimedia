@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 
 import { img1, img2, img3, img7, img8, img9 } from "./images";
+import logoWarefish from "../assets/logowarefish.png";
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 32 },
@@ -154,7 +155,7 @@ export default function Home() {
   }, []);
 
   const features = [
-    { icon: "📦", title: "Inventario", desc: "Control de productos y stock en tiempo real con alertas automáticas.", color: "#0F6E56", bg: "#E1F5EE" },
+    { icon: "📦", title: "Inventario", desc: "Control de productos y stock en tiempo real con alertas automáticas.", color: "#3674B5", bg: "#EEF4FF" },
     { icon: "💰", title: "Ventas", desc: "Punto de venta, historial de transacciones y control de ingresos.", color: "#1e40af", bg: "#eff6ff" },
     { icon: "👥", title: "Usuarios", desc: "Roles, permisos y accesos diferenciados por empresa.", color: "#7c3aed", bg: "#f5f3ff" },
     { icon: "🏢", title: "Multiempresa", desc: "Cada empresa tiene su propio espacio aislado y seguro.", color: "#b45309", bg: "#fffbeb" },
@@ -182,12 +183,7 @@ export default function Home() {
       <nav style={n.nav}>
         <div style={n.navInner}>
           <div style={n.brand}>
-            <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
-              <rect width="36" height="36" rx="9" fill="#0F6E56"/>
-              <path d="M8 18c0-5 4-9 9-9s9 4 9 9-4 9-9 9" stroke="white" strokeWidth="2.2" strokeLinecap="round"/>
-              <path d="M26 18h6l-3-4 3-4h-6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <circle cx="14" cy="15" r="1.5" fill="white"/>
-            </svg>
+            <img src={logoWarefish} alt="WareFish Logo" style={{ width: 90, height: 90, objectFit: "contain" }} />
             <span style={n.brandName}>WareFish</span>
           </div>
           <div style={n.navLinks}>
@@ -346,7 +342,7 @@ export default function Home() {
             <motion.div key={i} style={port.card}
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }} transition={{ delay: i * 0.06 }}
-              whileHover={{ y: -3, boxShadow: "0 8px 24px rgba(15,110,86,0.12)" }}
+              whileHover={{ y: -3, boxShadow: "0 8px 24px rgba(54,116,181,0.12)" }}
             >
               <span style={{ fontSize: "28px" }}>{esp.emoji}</span>
               <span style={port.label}>{esp.nombre}</span>
@@ -467,7 +463,7 @@ export default function Home() {
       {/* ── CÓMO FUNCIONA ── */}
       <section id="how" style={{ padding: "96px 32px", backgroundColor: "#f8fafc" }}>
         <motion.div style={f.header} {...fadeUp(0)}>
-          <div style={{ ...f.badge, color: "#0F6E56", borderColor: "#9FE1CB", backgroundColor: "#E1F5EE" }}>Proceso</div>
+          <div style={{ ...f.badge, color: "#3674B5", borderColor: "#bfdbfe", backgroundColor: "#EEF4FF" }}>Proceso</div>
           <h2 style={f.title}>Listo en 3 pasos</h2>
           <p style={f.subtitle}>Configura tu empresa y empieza a operar en minutos.</p>
         </motion.div>
@@ -501,12 +497,7 @@ export default function Home() {
       <footer style={fo.footer}>
         <div style={fo.inner}>
           <div style={fo.brand}>
-            <svg width="22" height="22" viewBox="0 0 36 36" fill="none">
-              <rect width="36" height="36" rx="9" fill="#0F6E56"/>
-              <path d="M8 18c0-5 4-9 9-9s9 4 9 9-4 9-9 9" stroke="white" strokeWidth="2.2" strokeLinecap="round"/>
-              <path d="M26 18h6l-3-4 3-4h-6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <circle cx="14" cy="15" r="1.5" fill="white"/>
-            </svg>
+            <img src={logoWarefish} alt="WareFish Logo" style={{ width: 32, height: 32, objectFit: "contain" }} />
             <span style={fo.brandName}>WareFish</span>
           </div>
           <span style={fo.copy}>© 2026 WareFish · Plataforma empresarial</span>
@@ -521,7 +512,7 @@ const mp = {
   wrap: { borderRadius: "16px", overflow: "hidden", border: "1px solid #e2e8f0", boxShadow: "0 8px 32px rgba(0,0,0,0.08)" },
   tabs: { display: "flex", backgroundColor: "#f1f5f9", borderBottom: "1px solid #e2e8f0" },
   tab: { flex: 1, padding: "10px 8px", border: "none", background: "transparent", fontSize: "12px", fontWeight: "500", color: "#64748b", cursor: "pointer", transition: "all 0.2s", borderBottom: "2px solid transparent" },
-  tabActive: { color: "#0F6E56", borderBottomColor: "#0F6E56", backgroundColor: "white", fontWeight: "700" },
+  tabActive: { color: "#3674B5", borderBottomColor: "#3674B5", backgroundColor: "white", fontWeight: "700" },
   mapContainer: { position: "relative", height: "340px", backgroundColor: "#e2e8f0" },
   iframe: { width: "100%", height: "100%", border: "none" },
   mapOverlay: { position: "absolute", bottom: "12px", left: "12px", backgroundColor: "rgba(255,255,255,0.95)", borderRadius: "10px", padding: "8px 12px", display: "flex", alignItems: "center", gap: "8px", boxShadow: "0 2px 12px rgba(0,0,0,0.15)" },
@@ -532,7 +523,7 @@ const mp = {
   mapImg: { width: "100%", height: "340px", objectFit: "cover", display: "block" },
   imgCaption: { position: "absolute", bottom: 0, left: 0, right: 0, backgroundColor: "rgba(15,23,42,0.75)", color: "white", fontSize: "11px", padding: "8px 14px", textAlign: "center" },
   links: { display: "flex", gap: "8px", padding: "12px", backgroundColor: "#f8fafc" },
-  linkBtn: { flex: 1, textAlign: "center", padding: "8px", borderRadius: "8px", border: "1px solid #e2e8f0", backgroundColor: "white", color: "#0F6E56", fontSize: "12px", fontWeight: "600", textDecoration: "none" },
+  linkBtn: { flex: 1, textAlign: "center", padding: "8px", borderRadius: "8px", border: "1px solid #e2e8f0", backgroundColor: "white", color: "#3674B5", fontSize: "12px", fontWeight: "600", textDecoration: "none" },
 };
 
 const ub = {
@@ -557,7 +548,7 @@ const act = {
   cardDesc: { fontSize: "13px", color: "#64748b", lineHeight: "1.6" },
   stats: { maxWidth: "900px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "0", backgroundColor: "white", borderRadius: "16px", border: "1px solid #e2e8f0", overflow: "hidden" },
   statItem: { display: "flex", flexDirection: "column", alignItems: "center", padding: "20px 16px", gap: "4px", borderRight: "1px solid #e2e8f0" },
-  statNum: { fontSize: "28px", fontWeight: "800", color: "#0F6E56" },
+  statNum: { fontSize: "28px", fontWeight: "800", color: "#3674B5" },
   statLabel: { fontSize: "12px", color: "#64748b", textAlign: "center" },
 };
 
@@ -572,14 +563,14 @@ const bc = {
   dot: { color: "rgba(255,255,255,0.15)", fontSize: "10px" },
   crumb: { fontSize: "11px", color: "rgba(255,255,255,0.38)", textDecoration: "none", padding: "2px 6px", borderRadius: "4px", whiteSpace: "nowrap" },
   crumbDim: { fontSize: "11px", color: "rgba(255,255,255,0.3)", whiteSpace: "nowrap" },
-  crumbActive: { fontSize: "11px", fontWeight: "600", color: "#34d399", padding: "2px 7px", backgroundColor: "rgba(15,110,86,0.25)", borderRadius: "4px", whiteSpace: "nowrap" },
+  crumbActive: { fontSize: "11px", fontWeight: "600", color: "#60a5fa", padding: "2px 7px", backgroundColor: "rgba(54,116,181,0.25)", borderRadius: "4px", whiteSpace: "nowrap" },
   crumbPage: { fontSize: "11px", fontWeight: "600", color: "#60a5fa", padding: "2px 7px", backgroundColor: "rgba(37,99,235,0.2)", borderRadius: "4px", whiteSpace: "nowrap" },
 };
 
 const info = {
   section: { padding: "80px 32px", backgroundColor: "white" },
   inner: { maxWidth: "1100px", margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "72px", alignItems: "center" },
-  tag: { display: "inline-block", fontSize: "12px", fontWeight: "600", color: "#0F6E56", backgroundColor: "#E1F5EE", padding: "3px 12px", borderRadius: "999px", marginBottom: "12px", letterSpacing: "0.03em" },
+  tag: { display: "inline-block", fontSize: "12px", fontWeight: "600", color: "#3674B5", backgroundColor: "#EEF4FF", padding: "3px 12px", borderRadius: "999px", marginBottom: "12px", letterSpacing: "0.03em" },
   title: { fontSize: "28px", fontWeight: "800", color: "#0f172a", lineHeight: "1.25", letterSpacing: "-0.02em", marginBottom: "14px" },
   desc: { fontSize: "14px", color: "#64748b", lineHeight: "1.75", marginBottom: "12px" },
   imgWrap: {},
@@ -598,7 +589,7 @@ const proc = {
   grid: { maxWidth: "900px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "24px" },
   card: { backgroundColor: "white", border: "1px solid #e2e8f0", borderRadius: "16px", padding: "28px 24px", display: "flex", flexDirection: "column", gap: "6px" },
   iconWrap: { fontSize: "28px", marginBottom: "6px" },
-  cargo: { fontSize: "11px", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.06em", color: "#0F6E56" },
+  cargo: { fontSize: "11px", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.06em", color: "#3674B5" },
   nombre: { fontSize: "15px", fontWeight: "700", color: "#0f172a" },
   desc: { fontSize: "13px", color: "#64748b", lineHeight: "1.6", marginTop: "4px" },
 };
@@ -606,15 +597,15 @@ const proc = {
 /* ─── NAVBAR ─── */
 const n = {
   nav: { position: "sticky", top: 0, zIndex: 100, backgroundColor: "rgba(15,23,42,0.95)", backdropFilter: "blur(12px)", borderBottom: "1px solid rgba(255,255,255,0.08)" },
-  navInner: { maxWidth: "1200px", margin: "0 auto", padding: "0 32px", height: "64px", display: "flex", justifyContent: "space-between", alignItems: "center" },
+  navInner: { maxWidth: "1200px", margin: "0 auto", padding: "6px 32px", display: "flex", justifyContent: "space-between", alignItems: "center" },
   brand: { display: "flex", alignItems: "center", gap: "10px" },
   brandName: { fontSize: "20px", fontWeight: "700", color: "white", letterSpacing: "-0.02em" },
   navLinks: { display: "flex", alignItems: "center", gap: "8px" },
   navLink: { color: "rgba(255,255,255,0.65)", fontSize: "14px", textDecoration: "none", padding: "6px 14px", borderRadius: "8px" },
   // ── NUEVO ──
-  btnTienda: { padding: "8px 18px", backgroundColor: "#0F6E56", border: "none", borderRadius: "8px", color: "white", fontSize: "14px", cursor: "pointer", fontWeight: "600" },
+  btnTienda: { padding: "8px 18px", backgroundColor: "#3674B5", border: "none", borderRadius: "8px", color: "white", fontSize: "14px", cursor: "pointer", fontWeight: "600" },
   btnOutline: { padding: "8px 18px", background: "transparent", border: "1px solid rgba(255,255,255,0.3)", borderRadius: "8px", color: "white", fontSize: "14px", cursor: "pointer", fontWeight: "500" },
-  btnPrimary: { padding: "8px 20px", backgroundColor: "#2563eb", border: "none", borderRadius: "8px", color: "white", fontSize: "14px", cursor: "pointer", fontWeight: "600" },
+  btnPrimary: { padding: "8px 20px", backgroundColor: "#3674B5", border: "none", borderRadius: "8px", color: "white", fontSize: "14px", cursor: "pointer", fontWeight: "600" },
 };
 
 /* ─── HERO ─── */
@@ -629,7 +620,7 @@ const h = {
   titleAccent: { color: "#60a5fa" },
   subtitle: { fontSize: "17px", color: "rgba(255,255,255,0.65)", lineHeight: "1.7", marginBottom: "32px", maxWidth: "440px" },
   ctas: { display: "flex", gap: "12px", marginBottom: "16px" },
-  ctaPrimary: { padding: "13px 28px", backgroundColor: "#2563eb", color: "white", border: "none", borderRadius: "10px", fontSize: "15px", fontWeight: "700", cursor: "pointer" },
+  ctaPrimary: { padding: "13px 28px", backgroundColor: "#3674B5", color: "white", border: "none", borderRadius: "10px", fontSize: "15px", fontWeight: "700", cursor: "pointer" },
   ctaSecondary: { padding: "13px 28px", background: "transparent", color: "white", border: "1px solid rgba(255,255,255,0.3)", borderRadius: "10px", fontSize: "15px", cursor: "pointer" },
   // ── NUEVO ──
   divider: { display: "flex", alignItems: "center", gap: "10px", margin: "4px 0 12px" },
@@ -644,7 +635,7 @@ const h = {
   img: { width: "100%", borderRadius: "16px", boxShadow: "0 40px 80px rgba(0,0,0,0.4)", display: "block" },
   floatBadge: { position: "absolute", bottom: "-18px", left: "-18px", backgroundColor: "white", borderRadius: "12px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "10px", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" },
   floatTitle: { fontSize: "11px", color: "#64748b", fontWeight: "500" },
-  floatValue: { fontSize: "14px", fontWeight: "700", color: "#0F6E56" },
+  floatValue: { fontSize: "14px", fontWeight: "700", color: "#3674B5" },
 };
 
 const st = {
@@ -675,8 +666,8 @@ const sy = {
   desc: { fontSize: "15px", color: "#64748b", lineHeight: "1.7", marginBottom: "24px" },
   list: { listStyle: "none", padding: 0, margin: "0 0 28px", display: "flex", flexDirection: "column", gap: "10px" },
   listItem: { display: "flex", alignItems: "flex-start", gap: "10px", fontSize: "14px", color: "#374151" },
-  check: { width: "20px", height: "20px", borderRadius: "50%", backgroundColor: "#E1F5EE", color: "#0F6E56", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", fontWeight: "700", flexShrink: 0, marginTop: "1px" },
-  cta: { padding: "12px 28px", backgroundColor: "#2563eb", color: "white", border: "none", borderRadius: "10px", fontSize: "15px", fontWeight: "700", cursor: "pointer" },
+  check: { width: "20px", height: "20px", borderRadius: "50%", backgroundColor: "#EEF4FF", color: "#3674B5", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", fontWeight: "700", flexShrink: 0, marginTop: "1px" },
+  cta: { padding: "12px 28px", backgroundColor: "#3674B5", color: "white", border: "none", borderRadius: "10px", fontSize: "15px", fontWeight: "700", cursor: "pointer" },
   imgWrap: {},
   img: { width: "100%", borderRadius: "16px", boxShadow: "0 20px 60px rgba(0,0,0,0.1)" },
 };
@@ -684,7 +675,7 @@ const sy = {
 const hw = {
   steps: { maxWidth: "900px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "32px" },
   step: { backgroundColor: "white", borderRadius: "16px", padding: "32px 28px", border: "1px solid #e2e8f0" },
-  stepNum: { fontSize: "36px", fontWeight: "900", color: "#eff6ff", WebkitTextStroke: "2px #2563eb", marginBottom: "16px", lineHeight: 1 },
+  stepNum: { fontSize: "36px", fontWeight: "900", color: "#eff6ff", WebkitTextStroke: "2px #3674B5", marginBottom: "16px", lineHeight: 1 },
   stepTitle: { fontSize: "18px", fontWeight: "700", color: "#0f172a", marginBottom: "8px" },
   stepDesc: { fontSize: "14px", color: "#64748b", lineHeight: "1.6" },
 };
@@ -695,7 +686,7 @@ const ct = {
   title: { fontSize: "40px", fontWeight: "800", color: "white", marginBottom: "16px", letterSpacing: "-0.02em" },
   subtitle: { fontSize: "16px", color: "rgba(255,255,255,0.72)", marginBottom: "36px", lineHeight: "1.6" },
   btns: { display: "flex", gap: "12px", justifyContent: "center" },
-  btnPrimary: { padding: "14px 32px", backgroundColor: "white", color: "#1d4ed8", border: "none", borderRadius: "10px", fontSize: "15px", fontWeight: "700", cursor: "pointer" },
+  btnPrimary: { padding: "14px 32px", backgroundColor: "white", color: "#3674B5", border: "none", borderRadius: "10px", fontSize: "15px", fontWeight: "700", cursor: "pointer" },
   btnOutline: { padding: "14px 32px", background: "transparent", color: "white", border: "1px solid rgba(255,255,255,0.4)", borderRadius: "10px", fontSize: "15px", cursor: "pointer" },
 };
 

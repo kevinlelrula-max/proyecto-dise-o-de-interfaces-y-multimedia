@@ -135,7 +135,7 @@ const s = {
   },
   btnGuardar: {
     flex: 2, padding: "10px",
-    background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
+    background: "linear-gradient(135deg, #3674B5, #3674B5)",
     border: "none", borderRadius: "9px", fontSize: "13px",
     fontWeight: "600", color: "#fff", cursor: "pointer",
   },

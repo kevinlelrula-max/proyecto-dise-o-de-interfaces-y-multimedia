@@ -1,7 +1,7 @@
 const ROLES = {
   1: { label: "SuperAdmin",    color: "#dc2626", bg: "#fef2f2" },
   2: { label: "Administrador", color: "#1d4ed8", bg: "#eff6ff" },
-  3: { label: "Empleado",      color: "#0F6E56", bg: "#E1F5EE" },
+  3: { label: "Empleado",      color: "#3674B5", bg: "#E1F5EE" },
   4: { label: "Cliente",       color: "#7c3aed", bg: "#f5f3ff" },
 };
 
@@ -124,7 +124,7 @@ const s = {
     display: "inline-block", fontSize: "12px", fontWeight: "600", padding: "3px 10px",
     borderRadius: "999px",
   },
-  activo: { color: "#0F6E56", background: "#E1F5EE" },
+  activo: { color: "#3674B5", background: "#E1F5EE" },
   inactivo: { color: "#94a3b8", background: "#f1f5f9" },
 
   actions: { display: "flex", gap: "6px", justifyContent: "center" },
@@ -137,7 +137,7 @@ const s = {
     borderRadius: "7px", cursor: "pointer", fontSize: "13px",
   },
   btnDesactivar: { background: "#fff7ed", borderColor: "#fed7aa", color: "#c2410c" },
-  btnActivar: { background: "#E1F5EE", borderColor: "#6ee7b7", color: "#0F6E56" },
+  btnActivar: { background: "#EEF4FF", borderColor: "#bfdbfe", color: "#3674B5" },
   btnDelete: {
     padding: "5px 8px", background: "#fef2f2", border: "1px solid #fecaca",
     borderRadius: "7px", cursor: "pointer", fontSize: "13px",

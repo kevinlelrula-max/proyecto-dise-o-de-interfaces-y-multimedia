@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginEmpresa } from "../services/api";
+import logoWarefish from "../assets/logowarefish.png";
 
 export default function LoginEmpresa() {
   const navigate = useNavigate();
@@ -46,13 +47,8 @@ export default function LoginEmpresa() {
       <div style={s.left}>
         <div style={s.leftContent}>
           <div style={s.leftLogo}>
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-              <rect width="36" height="36" rx="10" fill="white" fillOpacity="0.15"/>
-              <path d="M8 18c0-5 4-9 9-9s9 4 9 9-4 9-9 9" stroke="white" strokeWidth="2.2" strokeLinecap="round"/>
-              <path d="M26 18h6l-3-4 3-4h-6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <circle cx="14" cy="15" r="1.5" fill="white"/>
-            </svg>
-            <span style={s.leftLogoText}>FishWare</span>
+            <img src={logoWarefish} alt="WareFish Logo" style={{ width: 72, height: 72, objectFit: "contain" }} />
+            <span style={s.leftLogoText}>WareFish</span>
           </div>
 
           <div style={s.leftHero}>
@@ -89,12 +85,7 @@ export default function LoginEmpresa() {
 
           <div style={s.formHeader}>
             <div style={s.formLogoSmall}>
-              <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
-                <rect width="36" height="36" rx="10" fill="#1e3a5f"/>
-                <path d="M8 18c0-5 4-9 9-9s9 4 9 9-4 9-9 9" stroke="white" strokeWidth="2.2" strokeLinecap="round"/>
-                <path d="M26 18h6l-3-4 3-4h-6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <circle cx="14" cy="15" r="1.5" fill="white"/>
-              </svg>
+              <img src={logoWarefish} alt="WareFish Logo" style={{ width: 64, height: 64, objectFit: "contain" }} />
             </div>
             <h2 style={s.formTitle}>Iniciar sesión</h2>
             <p style={s.formSubtitle}>Accede al panel de tu empresa</p>
@@ -358,7 +349,7 @@ const s = {
   btnLogin: {
     width: "100%",
     padding: "13px",
-    backgroundColor: "#2563eb",
+    backgroundColor: "#3674B5",
     color: "white",
     fontSize: "15px",
     fontWeight: "600",
@@ -377,15 +368,15 @@ const s = {
     color: "#64748b",
   },
   registerLink: {
-    color: "#2563eb",
+    color: "#3674B5",
     fontWeight: "600",
     textDecoration: "none",
   },
   clienteBox: {
     marginTop: "16px",
     padding: "12px 16px",
-    backgroundColor: "#f0fdf4",
-    border: "1px solid #bbf7d0",
+    backgroundColor: "#EEF4FF",
+    border: "1px solid #bfdbfe",
     borderRadius: "10px",
     display: "flex",
     justifyContent: "space-between",
@@ -394,12 +385,12 @@ const s = {
   },
   clienteBoxText: {
     fontSize: "13px",
-    color: "#166534",
+    color: "#1e40af",
   },
   clienteBoxLink: {
     fontSize: "13px",
     fontWeight: "700",
-    color: "#0F6E56",
+    color: "#3674B5",
     textDecoration: "none",
     whiteSpace: "nowrap",
   },

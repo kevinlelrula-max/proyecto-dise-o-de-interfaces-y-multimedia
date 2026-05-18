@@ -9,10 +9,19 @@ const METODOS_ICONO = {
   "Daviplata": "📱",
 };
 
+const ESTADO_META = {
+  "completada":     { label: "Completada",     color: "#166534", bg: "#dcfce7" },
+  "pendiente":      { label: "Pendiente",       color: "#92400e", bg: "#fef3c7" },
+  "en preparacion": { label: "En preparación",  color: "#1e40af", bg: "#dbeafe" },
+  "enviado":        { label: "Enviado",          color: "#0e7490", bg: "#cffafe" },
+  "entregado":      { label: "Entregado",        color: "#166534", bg: "#dcfce7" },
+};
+
 const Ventas = () => {
   const [ventas, setVentas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [busqueda, setBusqueda] = useState("");
+  const [filtroOrigen, setFiltroOrigen] = useState("todos");
   const [paginaActual, setPaginaActual] = useState(1);
   const ventasPorPagina = 10;
 
@@ -31,12 +40,21 @@ const Ventas = () => {
     fetchData();
   }, []);
 
-  useEffect(() => { setPaginaActual(1); }, [busqueda]);
+  useEffect(() => { setPaginaActual(1); }, [busqueda, filtroOrigen]);
 
-  const ventasFiltradas = ventas.filter((v) =>
-    (v.cliente || "").toLowerCase().includes(busqueda.toLowerCase()) ||
-    (v.metodo_pago || "").toLowerCase().includes(busqueda.toLowerCase())
-  );
+  const ventasFiltradas = ventas.filter((v) => {
+    const coincideBusqueda =
+      (v.cliente || "").toLowerCase().includes(busqueda.toLowerCase()) ||
+      (v.metodo_pago || "").toLowerCase().includes(busqueda.toLowerCase());
+    const coincideOrigen =
+      filtroOrigen === "todos" ||
+      (filtroOrigen === "pos"    && v.origen === "POS") ||
+      (filtroOrigen === "online" && v.origen === "Tienda online");
+    return coincideBusqueda && coincideOrigen;
+  });
+
+  const totalPOS    = ventas.filter(v => v.origen === "POS").length;
+  const totalOnline = ventas.filter(v => v.origen === "Tienda online").length;
 
   const totalGeneral = ventas.reduce((acc, v) => acc + (Number(v.total) || 0), 0);
   const promedioVenta = ventas.length > 0 ? totalGeneral / ventas.length : 0;
@@ -63,8 +81,29 @@ const Ventas = () => {
       {/* HEADER */}
       <div style={s.header}>
         <div style={s.headerLeft}>
-          <span style={{ fontSize: "22px" }}></span>
-          <h2 style={s.headerTitle}>Historial de Ventas</h2>
+          <span style={{ fontSize: "22px" }}>🧾</span>
+          <div>
+            <h2 style={s.headerTitle}>Historial de Ventas</h2>
+            <p style={s.headerSub}>POS + Tienda online · excluye pedidos cancelados</p>
+          </div>
+        </div>
+        <div style={s.origenFiltros}>
+          {[
+            { key: "todos",  label: "Todos",        count: ventas.length },
+            { key: "pos",    label: "💻 POS",        count: totalPOS },
+            { key: "online", label: "🛒 Tienda",     count: totalOnline },
+          ].map(o => (
+            <button
+              key={o.key}
+              style={{ ...s.origenBtn, ...(filtroOrigen === o.key ? s.origenBtnActive : {}) }}
+              onClick={() => setFiltroOrigen(o.key)}
+            >
+              {o.label}
+              <span style={{ ...s.origenCount, ...(filtroOrigen === o.key ? { backgroundColor: "rgba(255,255,255,0.25)" } : {}) }}>
+                {o.count}
+              </span>
+            </button>
+          ))}
         </div>
       </div>
 
@@ -72,11 +111,11 @@ const Ventas = () => {
       <div style={s.statsRow}>
         <div style={s.statCard}>
           <span style={s.statLabel}>Total ventas</span>
-          <span style={{ ...s.statValue, color: "#2563eb" }}>{ventas.length}</span>
+          <span style={{ ...s.statValue, color: "#3674B5" }}>{ventas.length}</span>
         </div>
         <div style={s.statCard}>
           <span style={s.statLabel}>Ingresos totales</span>
-          <span style={{ ...s.statValue, color: "#0F6E56", fontSize: "18px" }}>
+          <span style={{ ...s.statValue, color: "#3674B5", fontSize: "18px" }}>
             ${totalGeneral.toLocaleString()}
           </span>
         </div>
@@ -117,6 +156,7 @@ const Ventas = () => {
             <tr>
               <th style={s.th}>Cliente</th>
               <th style={s.th}>Fecha</th>
+              <th style={s.th}>Origen</th>
               <th style={s.th}>Método de pago</th>
               <th style={{ ...s.th, textAlign: "right" }}>Total</th>
               <th style={{ ...s.th, textAlign: "center" }}>Estado</th>
@@ -124,8 +164,10 @@ const Ventas = () => {
           </thead>
           <tbody>
             {ventasPaginadas.length > 0 ? (
-              ventasPaginadas.map((v) => (
-                <tr key={v.venta_id} style={s.row}>
+              ventasPaginadas.map((v, idx) => {
+                const estadoMeta = ESTADO_META[v.estado?.toLowerCase()] || ESTADO_META["completada"];
+                return (
+                <tr key={`${v.origen}-${v.venta_id}-${idx}`} style={s.row}>
 
                   {/* Cliente */}
                   <td style={s.td}>
@@ -159,6 +201,18 @@ const Ventas = () => {
                     </div>
                   </td>
 
+                  {/* Origen */}
+                  <td style={s.td}>
+                    <span style={{
+                      ...s.origenBadge,
+                      ...(v.origen === "POS"
+                        ? { backgroundColor: "#f1f5f9", color: "#475569" }
+                        : { backgroundColor: "#eff6ff", color: "#1e40af" }),
+                    }}>
+                      {v.origen === "POS" ? "💻 POS" : "🛒 Tienda"}
+                    </span>
+                  </td>
+
                   {/* Método de pago */}
                   <td style={s.td}>
                     <span style={s.metodoBadge}>
@@ -175,11 +229,14 @@ const Ventas = () => {
 
                   {/* Estado */}
                   <td style={{ ...s.td, textAlign: "center" }}>
-                    <span style={s.estadoBadge}>Completada</span>
+                    <span style={{ ...s.estadoBadge, backgroundColor: estadoMeta.bg, color: estadoMeta.color }}>
+                      {estadoMeta.label}
+                    </span>
                   </td>
 
                 </tr>
-              ))
+                );
+              })
             ) : (
               <tr>
                 <td colSpan="5" style={s.emptyCell}>
@@ -224,9 +281,16 @@ export default Ventas;
 const s = {
   page: { padding: "24px" },
 
-  header: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" },
+  header: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "12px" },
   headerLeft: { display: "flex", alignItems: "center", gap: "10px" },
   headerTitle: { fontSize: "20px", fontWeight: "700", color: "#0f172a", margin: 0 },
+  headerSub: { fontSize: "12px", color: "#94a3b8", marginTop: "2px" },
+
+  origenFiltros: { display: "flex", gap: "6px" },
+  origenBtn: { display: "flex", alignItems: "center", gap: "6px", padding: "6px 12px", borderRadius: "8px", border: "1px solid #e2e8f0", background: "white", fontSize: "12px", fontWeight: "500", color: "#64748b", cursor: "pointer" },
+  origenBtnActive: { backgroundColor: "#3674B5", borderColor: "#3674B5", color: "white", fontWeight: "700" },
+  origenCount: { fontSize: "11px", fontWeight: "700", backgroundColor: "#f1f5f9", color: "#64748b", padding: "1px 6px", borderRadius: "999px" },
+  origenBadge: { fontSize: "12px", fontWeight: "600", padding: "3px 8px", borderRadius: "6px" },
 
   // Stats
   statsRow: { display: "flex", gap: "12px", marginBottom: "20px" },
@@ -271,7 +335,7 @@ const s = {
   clienteWrap: { display: "flex", alignItems: "center", gap: "10px" },
   avatar: {
     width: "32px", height: "32px", borderRadius: "50%",
-    backgroundColor: "#eff6ff", color: "#2563eb",
+    backgroundColor: "#EEF4FF", color: "#3674B5",
     fontSize: "13px", fontWeight: "700",
     display: "flex", alignItems: "center", justifyContent: "center",
     flexShrink: 0,
@@ -295,11 +359,7 @@ const s = {
   total: { fontSize: "14px", fontWeight: "700", color: "#0f172a" },
 
   // Estado
-  estadoBadge: {
-    display: "inline-block", padding: "4px 10px",
-    borderRadius: "999px", fontSize: "11px", fontWeight: "600",
-    backgroundColor: "#E1F5EE", color: "#0F6E56",
-  },
+  estadoBadge: { display: "inline-block", padding: "3px 10px", borderRadius: "999px", fontSize: "11px", fontWeight: "600" },
 
   emptyCell: {
     padding: "48px", textAlign: "center",

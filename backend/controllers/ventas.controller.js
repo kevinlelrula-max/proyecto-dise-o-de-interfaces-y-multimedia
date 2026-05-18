@@ -98,27 +98,43 @@ export const listarVentasEmpresa = async (req, res) => {
   try {
     const empresa_id = req.user.empresa_id;
     const { hoy } = req.query;
- 
-    // ✅ Si viene ?hoy=true filtra solo las ventas de hoy
-    const filtroFecha = hoy === "true"
-      ? "AND DATE(v.fecha) = CURRENT_DATE"
-      : "";
- 
+
+    const filtroPOS    = hoy === "true" ? "AND DATE(v.fecha)        = CURRENT_DATE" : "";
+    const filtroOnline = hoy === "true" ? "AND DATE(po.fecha_pedido) = CURRENT_DATE" : "";
+
     const result = await pool.query(
-      `SELECT 
-         v.id AS venta_id,
+      `SELECT
+         v.id          AS venta_id,
          v.fecha,
          v.total,
-         p_cliente.nombre || ' ' || p_cliente.apellido AS cliente,
-         mp.metodo AS metodo_pago
+         pc.nombre || ' ' || pc.apellido AS cliente,
+         mp.metodo     AS metodo_pago,
+         'completada'  AS estado,
+         'POS'         AS origen
        FROM ventas v
-       JOIN persona p_cliente ON v.cliente_id = p_cliente.id
-       JOIN metodo_pago mp ON v.metodo_pago_id = mp.id
-       WHERE v.empresa_id = $1 ${filtroFecha}
-       ORDER BY v.fecha DESC`,
+       JOIN persona     pc ON pc.id = v.cliente_id
+       JOIN metodo_pago mp ON mp.id = v.metodo_pago_id
+       WHERE v.empresa_id = $1 ${filtroPOS}
+
+       UNION ALL
+
+       SELECT
+         po.id           AS venta_id,
+         po.fecha_pedido AS fecha,
+         po.total,
+         pc.nombre || ' ' || pc.apellido AS cliente,
+         mp.metodo       AS metodo_pago,
+         po.estado,
+         'Tienda online'  AS origen
+       FROM pedidos_online po
+       JOIN persona     pc ON pc.id = po.cliente_id
+       LEFT JOIN metodo_pago mp ON mp.id = po.metodo_pago_id
+       WHERE po.empresa_id = $1 AND po.estado != 'cancelado' ${filtroOnline}
+
+       ORDER BY fecha DESC`,
       [empresa_id]
     );
- 
+
     res.json(result.rows);
   } catch (error) {
     console.error(error);
@@ -226,20 +242,30 @@ export const historialCliente = async (req, res) => {
 export const reporteProductos = async (req, res) => {
   try {
     const empresa_id = req.user.empresa_id;
+    const { desde, hasta } = req.query;
+    const filtroPOS    = desde && hasta ? `AND v.fecha        BETWEEN '${desde}' AND '${hasta} 23:59:59'` : "";
+    const filtroOnline = desde && hasta ? `AND po.fecha_pedido BETWEEN '${desde}' AND '${hasta} 23:59:59'` : "";
 
-    const result = await pool.query(
-      `SELECT 
-        p.nombre,
-        SUM(dv.kilos) AS total_vendido,
-        SUM(dv.kilos * dv.precio_unitario) AS total_ingresos
-      FROM detalle_venta dv
-      JOIN productos p ON dv.producto_id = p.id
-      JOIN ventas v ON dv.venta_id = v.id
-      WHERE v.empresa_id = $1
-      GROUP BY p.nombre
-      ORDER BY total_vendido DESC`,
-      [empresa_id]
-    );
+    const result = await pool.query(`
+      SELECT
+        pr.nombre,
+        SUM(t.kilos)    AS total_vendido,
+        SUM(t.ingresos) AS total_ingresos
+      FROM (
+        SELECT dv.producto_id, dv.kilos, dv.kilos * dv.precio_unitario AS ingresos
+        FROM detalle_venta dv
+        JOIN ventas v ON v.id = dv.venta_id
+        WHERE v.empresa_id = $1 ${filtroPOS}
+        UNION ALL
+        SELECT dp.producto_id, dp.kilos, dp.kilos * dp.precio_unitario AS ingresos
+        FROM detalle_pedido_online dp
+        JOIN pedidos_online po ON po.id = dp.pedido_id
+        WHERE po.empresa_id = $1 AND po.estado != 'cancelado' ${filtroOnline}
+      ) t
+      JOIN productos pr ON pr.id = t.producto_id
+      GROUP BY pr.nombre
+      ORDER BY total_vendido DESC
+    `, [empresa_id]);
 
     res.json(result.rows);
 

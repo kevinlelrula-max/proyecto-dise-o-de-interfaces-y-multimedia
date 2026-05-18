@@ -5,7 +5,7 @@ const ESTADOS = {
   confirmado:      { label: "Confirmado",       color: "#1e40af", bg: "#eff6ff", icon: "✅" },
   en_preparacion:  { label: "En preparación",  color: "#7c3aed", bg: "#f5f3ff", icon: "👨‍🍳" },
   enviado:         { label: "Enviado",          color: "#0e7490", bg: "#ecfeff", icon: "🚚" },
-  entregado:       { label: "Entregado",        color: "#0F6E56", bg: "#E1F5EE", icon: "📦" },
+  entregado:       { label: "Entregado",        color: "#166534", bg: "#dcfce7", icon: "📦" },
   cancelado:       { label: "Cancelado",        color: "#dc2626", bg: "#fef2f2", icon: "❌" },
 };
 
@@ -96,35 +96,66 @@ function BarraEstado({ estado }) {
   if (estado === "cancelado") {
     return (
       <div style={bs.wrap}>
-        <div style={{ ...bs.cancelado }}>❌ Pedido cancelado</div>
+        <div style={bs.cancelado}>❌ Pedido cancelado</div>
       </div>
     );
   }
   const idx = PASOS.indexOf(estado);
   return (
-    <div style={bs.wrap}>
-      {PASOS.map((paso, i) => {
-        const info = ESTADOS[paso];
-        const activo = i <= idx;
-        return (
-          <div key={paso} style={bs.paso}>
-            <div style={{
-              ...bs.circulo,
-              background: activo ? "#0F6E56" : "#e2e8f0",
-              color: activo ? "white" : "#94a3b8",
-            }}>
-              {activo ? "✓" : i + 1}
+    <>
+      <style>{`
+        @keyframes stepPop {
+          0%   { transform: scale(0); opacity: 0; }
+          60%  { transform: scale(1.2); opacity: 1; }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes lineGrow {
+          from { width: 0; }
+          to   { width: 100%; }
+        }
+      `}</style>
+      <div style={bs.wrap}>
+        {PASOS.map((paso, i) => {
+          const info = ESTADOS[paso];
+          const activo = i <= idx;
+          const lineaActiva = activo && i < idx;
+          return (
+            <div key={paso} style={bs.paso}>
+              {/* Línea conectora (detrás del círculo) */}
+              {i < PASOS.length - 1 && (
+                <div style={bs.lineaBase}>
+                  {lineaActiva && (
+                    <div style={{
+                      ...bs.lineaFill,
+                      animation: `lineGrow 0.5s ease ${i * 120}ms both`,
+                    }} />
+                  )}
+                </div>
+              )}
+
+              {/* Círculo */}
+              <div style={{
+                ...bs.circulo,
+                background: activo ? "#3674B5" : "#e2e8f0",
+                color:      activo ? "white"   : "#94a3b8",
+                boxShadow:  activo ? "0 0 0 3px rgba(54,116,181,0.18)" : "none",
+                animation:  activo ? `stepPop 0.4s cubic-bezier(0.34,1.56,0.64,1) ${i * 120}ms both` : "none",
+              }}>
+                {activo ? "✓" : i + 1}
+              </div>
+
+              <p style={{
+                ...bs.pasoLabel,
+                color:      activo ? "#3674B5" : "#94a3b8",
+                fontWeight: activo ? 600 : 400,
+              }}>
+                {info.label}
+              </p>
             </div>
-            {i < PASOS.length - 1 && (
-              <div style={{ ...bs.linea, background: activo && i < idx ? "#0F6E56" : "#e2e8f0" }} />
-            )}
-            <p style={{ ...bs.pasoLabel, color: activo ? "#0F6E56" : "#94a3b8", fontWeight: activo ? 600 : 400 }}>
-              {info.label}
-            </p>
-          </div>
-        );
-      })}
-    </div>
+          );
+        })}
+      </div>
+    </>
   );
 }
 
@@ -135,12 +166,18 @@ const bs = {
     width: 28, height: 28, borderRadius: "50%",
     display: "flex", alignItems: "center", justifyContent: "center",
     fontSize: 12, fontWeight: 700, zIndex: 1, marginBottom: 6,
+    transition: "background 0.3s, box-shadow 0.3s",
+    position: "relative",
   },
-  linea: {
-    position: "absolute", top: 14, left: "50%", width: "100%",
-    height: 2, zIndex: 0,
+  lineaBase: {
+    position: "absolute", top: 13, left: "50%", width: "100%",
+    height: 2, backgroundColor: "#e2e8f0", zIndex: 0, overflow: "hidden",
   },
-  pasoLabel: { fontSize: 10, textAlign: "center", lineHeight: 1.3 },
+  lineaFill: {
+    height: "100%", backgroundColor: "#3674B5",
+    borderRadius: 2,
+  },
+  pasoLabel: { fontSize: 10, textAlign: "center", lineHeight: 1.3, transition: "color 0.3s" },
   cancelado: {
     background: "#fef2f2", color: "#dc2626",
     borderRadius: 8, padding: "8px 14px",
@@ -174,24 +211,24 @@ const s = {
   chevron: { fontSize: 11, color: "#94a3b8" },
   detalle: {
     padding: "0 20px 20px",
-    borderTop: "1px solid #f0f7f4",
+    borderTop: "1px solid #f1f5f9",
     paddingTop: 16,
   },
   productos: { marginBottom: 16 },
   seccionTitulo: {
-    fontSize: 11, fontWeight: 700, color: "#0F6E56",
+    fontSize: 11, fontWeight: 700, color: "#3674B5",
     textTransform: "uppercase", letterSpacing: "0.05em",
     margin: "0 0 10px",
   },
   productoRow: {
     display: "flex", alignItems: "center", gap: 8,
-    padding: "6px 0", borderBottom: "1px solid #f0f7f4",
+    padding: "6px 0", borderBottom: "1px solid #f1f5f9",
   },
   productoNombre: { flex: 1, fontSize: 13, color: "#374151" },
   productoKilos: { fontSize: 12, color: "#64748b", minWidth: 48, textAlign: "center" },
   productoSubtotal: { fontSize: 13, fontWeight: 700, color: "#0f172a", minWidth: 80, textAlign: "right" },
   infoEntrega: {
-    background: "#f8faf9", borderRadius: 10, padding: "12px 14px",
+    background: "#f8fafc", borderRadius: 10, padding: "12px 14px",
     display: "flex", flexDirection: "column", gap: 8,
   },
   infoRow: { display: "flex", gap: 10, alignItems: "flex-start" },

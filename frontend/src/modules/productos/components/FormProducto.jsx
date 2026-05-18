@@ -131,9 +131,9 @@ export default function FormProducto({ producto, onClose, onSave }) {
               onChange={handleChange}
               style={{
                 ...styles.input,
-                background: form.precio_costo && form.porcentaje_ganancia ? "#f0f7f4" : "#fff",
+                background: form.precio_costo && form.porcentaje_ganancia ? "#EEF4FF" : "#fff",
                 fontWeight: 700,
-                color: "#0F6E56",
+                color: "#3674B5",
               }}
               required
             />
@@ -145,7 +145,7 @@ export default function FormProducto({ producto, onClose, onSave }) {
               <span style={styles.gananciaLabel}>Ganancia por unidad</span>
               <span style={{
                 ...styles.gananciaValor,
-                color: Number(form.precio) >= Number(form.precio_costo) ? "#0F6E56" : "#dc2626"
+                color: Number(form.precio) >= Number(form.precio_costo) ? "#3674B5" : "#dc2626"
               }}>
                 ${(Number(form.precio) - Number(form.precio_costo)).toLocaleString("es-CO")} COP
               </span>
@@ -247,7 +247,7 @@ const styles = {
   gananciaValor: { fontSize: 13, fontWeight: 700 },
   autoTag: {
     marginLeft: 8, fontSize: 10, fontWeight: 600,
-    color: "#0F6E56", background: "#E1F5EE",
+    color: "#3674B5", background: "#EEF4FF",
     padding: "1px 7px", borderRadius: 999,
     verticalAlign: "middle",
   },

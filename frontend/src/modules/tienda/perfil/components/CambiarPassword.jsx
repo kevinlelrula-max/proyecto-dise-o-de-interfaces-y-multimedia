@@ -129,5 +129,5 @@ const s = {
     cursor: "pointer",
   },
   msgError: { fontSize: 13, color: "#ef4444", margin: 0, fontWeight: 500 },
-  msgExito: { fontSize: 13, color: "#0F6E56", margin: 0, fontWeight: 500 },
+  msgExito: { fontSize: 13, color: "#3674B5", margin: 0, fontWeight: 500 },
 };

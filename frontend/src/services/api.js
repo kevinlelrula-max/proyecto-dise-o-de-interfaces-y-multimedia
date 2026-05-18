@@ -297,15 +297,59 @@ export const getMetodosPago = async () => {
 // =========================
 // 🔹 REPORTES
 // =========================
-export const getReporteProductos = async (token) => {
+export const getReporteProductos = async (token, { desde, hasta } = {}) => {
   try {
-    const res = await axios.get(`${API_URL}/ventas/reportes/productos`, {
+    const params = desde && hasta ? `?desde=${desde}&hasta=${hasta}` : "";
+    const res = await axios.get(`${API_URL}/ventas/reportes/productos${params}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
   } catch (error) {
     console.error("Error reporte:", error);
     return [];
+  }
+};
+
+export const getReporteResumen = async (token, { desde, hasta } = {}) => {
+  try {
+    const params = desde && hasta ? `?desde=${desde}&hasta=${hasta}` : "";
+    const res = await axios.get(`${API_URL}/reportesEmpresa/resumen${params}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  } catch (error) {
+    console.error("Error resumen:", error);
+    return null;
+  }
+};
+
+// =========================
+// 🔹 HISTORIAL CLIENTE
+// =========================
+export const getHistorialCliente = async (clienteId, token) => {
+  try {
+    const res = await axios.get(`${API_URL}/ventas/cliente/${clienteId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  } catch (error) {
+    console.error("Error historial cliente:", error);
+    return [];
+  }
+};
+
+// =========================
+// 🏠 DASHBOARD INICIO
+// =========================
+export const getDashboard = async (token) => {
+  try {
+    const res = await axios.get(`${API_URL}/dashboard`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  } catch (error) {
+    console.error("Error dashboard:", error);
+    return null;
   }
 };
 

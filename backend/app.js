@@ -16,6 +16,9 @@ import empresaRoutes       from "./routes/empresa.routes.js";
 import tiendaRoutes        from "./routes/tienda.routes.js";
 import pedidosRoutes       from "./routes/pedidos.routes.js";
 import pagosRoutes         from "./routes/pagos.routes.js";
+import contactoRoutes          from "./routes/contacto.routes.js";
+import notificacionesRoutes    from "./routes/notificaciones.routes.js";
+import dashboardRoutes         from "./routes/dashboard.routes.js";
 
 const app = express();
 
@@ -56,6 +59,9 @@ app.use("/api/empresas",         empresaRoutes);
 app.use("/api/tienda",           tiendaRoutes);
 app.use("/api/pedidos",          pedidosRoutes);
 app.use("/api/pagos",            pagosRoutes);
+app.use("/api/contacto",         contactoRoutes);
+app.use("/api/notificaciones",   notificacionesRoutes);
+app.use("/api/dashboard",        dashboardRoutes);
 // =========================
 // 🔹 404 HANDLER
 // =========================

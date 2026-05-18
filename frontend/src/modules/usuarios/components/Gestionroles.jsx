@@ -16,7 +16,7 @@ const TODAS_LAS_SECCIONES = [
 const COLORES = [
   { color: "#dc2626", bg: "#fef2f2" },
   { color: "#1d4ed8", bg: "#eff6ff" },
-  { color: "#0F6E56", bg: "#E1F5EE" },
+  { color: "#3674B5", bg: "#E1F5EE" },
   { color: "#7c3aed", bg: "#f5f3ff" },
   { color: "#b45309", bg: "#fffbeb" },
   { color: "#0891b2", bg: "#ecfeff" },
@@ -353,7 +353,7 @@ const s = {
   },
 
   permisosList: { display: "flex", flexDirection: "column", gap: "3px" },
-  permisoItem:  { fontSize: "12px", color: "#0F6E56" },
+  permisoItem:  { fontSize: "12px", color: "#3674B5" },
 
   editorPermisos: {
     background: "#f8fafc", border: "1px solid #e2e8f0",

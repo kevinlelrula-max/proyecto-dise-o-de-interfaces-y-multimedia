@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { registroCliente } from "../services/api";
 import { getDepartamentos, getMunicipios } from "../modules/ubicacion/services/ubicacion.api";
+import logoWarefish from "../assets/logowarefish.png";
 
 export default function RegistroCliente() {
   const navigate = useNavigate();
@@ -101,12 +102,7 @@ export default function RegistroCliente() {
       <div style={s.left}>
         <div style={s.leftContent}>
           <div style={s.logo}>
-            <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
-              <rect width="36" height="36" rx="9" fill="rgba(255,255,255,0.15)"/>
-              <path d="M8 18c0-5 4-9 9-9s9 4 9 9-4 9-9 9" stroke="white" strokeWidth="2.2" strokeLinecap="round"/>
-              <path d="M26 18h6l-3-4 3-4h-6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <circle cx="14" cy="15" r="1.5" fill="white"/>
-            </svg>
+            <img src={logoWarefish} alt="WareFish Logo" style={{ width: 64, height: 64, objectFit: "contain" }} />
             <span style={s.logoText}>WareFish · Tienda</span>
           </div>
 
@@ -123,7 +119,7 @@ export default function RegistroCliente() {
                 <div style={{
                   ...s.stepCircle,
                   backgroundColor: step >= st.n ? "white" : "rgba(255,255,255,0.15)",
-                  color: step >= st.n ? "#0F6E56" : "rgba(255,255,255,0.4)",
+                  color: step >= st.n ? "#3674B5" : "rgba(255,255,255,0.4)",
                 }}>
                   {step > st.n ? "✓" : st.n}
                 </div>
@@ -313,7 +309,7 @@ const s = {
   right: { flex: 1, backgroundColor: "#f8fafc", display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 40px", overflowY: "auto" },
   formWrap: { width: "100%", maxWidth: "520px" },
   formHeader: { marginBottom: "28px" },
-  stepTag: { display: "inline-block", fontSize: "11px", fontWeight: "700", color: "#0F6E56", backgroundColor: "#E1F5EE", padding: "3px 10px", borderRadius: "999px", letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: "12px" },
+  stepTag: { display: "inline-block", fontSize: "11px", fontWeight: "700", color: "#3674B5", backgroundColor: "#EEF4FF", padding: "3px 10px", borderRadius: "999px", letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: "12px" },
   formTitle: { fontSize: "24px", fontWeight: "800", color: "#0f172a", letterSpacing: "-0.02em", marginBottom: "6px" },
   formSubtitle: { fontSize: "14px", color: "#64748b" },
   errorBox: { backgroundColor: "#fef2f2", border: "1px solid #fecaca", borderRadius: "10px", padding: "10px 14px", fontSize: "13px", color: "#b91c1c", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" },
@@ -326,7 +322,7 @@ const s = {
   hint: { fontSize: "12px", color: "#94a3b8", backgroundColor: "#f1f5f9", padding: "10px 14px", borderRadius: "8px", lineHeight: "1.6" },
   btnRow: { display: "flex", gap: "10px" },
   btnBack: { padding: "12px 20px", background: "transparent", border: "1.5px solid #e2e8f0", borderRadius: "10px", fontSize: "14px", color: "#64748b", cursor: "pointer", fontWeight: "500" },
-  btnNext: { flex: 1, padding: "13px", backgroundColor: "#0F6E56", color: "white", border: "none", borderRadius: "10px", fontSize: "15px", fontWeight: "700", cursor: "pointer", transition: "opacity 0.2s" },
+  btnNext: { flex: 1, padding: "13px", backgroundColor: "#3674B5", color: "white", border: "none", borderRadius: "10px", fontSize: "15px", fontWeight: "700", cursor: "pointer", transition: "opacity 0.2s" },
   skipText: { textAlign: "center", marginTop: "14px" },
   skipBtn: { background: "none", border: "none", color: "#94a3b8", fontSize: "13px", cursor: "pointer", textDecoration: "underline" },
 };

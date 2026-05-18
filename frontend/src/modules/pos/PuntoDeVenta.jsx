@@ -22,6 +22,7 @@ export default function PuntoDeVenta() {
 
   const [pestana, setPestana] = useState("venta");
   const [toast, setToast] = useState(null);
+  const [ventaExitosa, setVentaExitosa] = useState(null);
 
   const [productos, setProductos] = useState([]);
   const [clienteSeleccionado, setClienteSeleccionado] = useState(null);
@@ -141,12 +142,11 @@ export default function PuntoDeVenta() {
         token
       );
 
-      setToast({
-        type: "success",
-        message: "Venta realizada correctamente"
+      setVentaExitosa({
+        clienteNombre: `${clienteSeleccionado.nombre} ${clienteSeleccionado.apellido || ""}`.trim(),
+        total,
+        id: res.id || res.venta_id || "—",
       });
-
-      setTimeout(() => setToast(null), 3000);
 
       setCarrito([]);
       setClienteSeleccionado(null);
@@ -167,14 +167,120 @@ export default function PuntoDeVenta() {
 
   const fmt = (n) => Number(n).toLocaleString("es-CO");
 
+  const posS = {
+    overlay: {
+      position: "fixed", inset: 0,
+      backgroundColor: "rgba(11,22,40,0.55)",
+      backdropFilter: "blur(6px)",
+      zIndex: 500,
+      display: "flex", alignItems: "center", justifyContent: "center",
+      animation: "overlayIn 0.25s ease both",
+    },
+    card: {
+      backgroundColor: "#fff",
+      borderRadius: "20px",
+      padding: "40px 36px",
+      maxWidth: "380px", width: "90%",
+      textAlign: "center",
+      boxShadow: "0 24px 64px rgba(0,0,0,0.18)",
+      animation: "cardBounce 0.5s cubic-bezier(0.34,1.56,0.64,1) both",
+    },
+    iconWrap: { marginBottom: "16px", display: "flex", justifyContent: "center" },
+    title: { fontSize: "22px", fontWeight: "800", color: "#0B1628", margin: "0 0 6px" },
+    sub: { fontSize: "13px", color: "#64748b", margin: "0 0 24px" },
+    resumen: {
+      backgroundColor: "#f8fafc",
+      border: "1px solid #e2e8f0",
+      borderRadius: "12px",
+      padding: "16px 20px",
+      display: "flex", flexDirection: "column", gap: "12px",
+      marginBottom: "24px",
+      textAlign: "left",
+    },
+    resumenRow: { display: "flex", justifyContent: "space-between", alignItems: "center" },
+    resumenLabel: { fontSize: "12px", color: "#94a3b8", fontWeight: "500" },
+    resumenVal: { fontSize: "14px", color: "#0B1628", fontWeight: "600" },
+    btnCerrar: {
+      width: "100%", padding: "13px",
+      backgroundColor: "#3674B5", color: "white",
+      border: "none", borderRadius: "10px",
+      fontSize: "14px", fontWeight: "700",
+      cursor: "pointer",
+    },
+  };
+
   return (
     <div className="pos-wrap">
 
-      {/* TOAST */}
+      {/* TOAST (errores) */}
       {toast && (
         <div className="toast">
           {toast.type === "success" ? "✅" : "⚠️"} {toast.message}
         </div>
+      )}
+
+      {/* OVERLAY VENTA EXITOSA */}
+      {ventaExitosa && (
+        <>
+          <style>{`
+            @keyframes overlayIn   { from { opacity: 0; } to { opacity: 1; } }
+            @keyframes cardBounce  {
+              0%   { transform: scale(0.6); opacity: 0; }
+              65%  { transform: scale(1.04); opacity: 1; }
+              100% { transform: scale(1); }
+            }
+            @keyframes checkDraw {
+              from { stroke-dashoffset: 60; }
+              to   { stroke-dashoffset: 0; }
+            }
+            @keyframes ringPop {
+              0%   { transform: scale(0.5); opacity: 0; }
+              70%  { transform: scale(1.08); opacity: 1; }
+              100% { transform: scale(1); }
+            }
+          `}</style>
+          <div style={posS.overlay} onClick={() => setVentaExitosa(null)}>
+            <div style={posS.card} onClick={e => e.stopPropagation()}>
+
+              {/* Ícono animado */}
+              <div style={posS.iconWrap}>
+                <svg width="72" height="72" viewBox="0 0 72 72" fill="none"
+                  style={{ animation: "ringPop 0.5s cubic-bezier(0.34,1.56,0.64,1) both" }}>
+                  <circle cx="36" cy="36" r="34" fill="#EEF4FF" stroke="#3674B5" strokeWidth="2.5" />
+                  <polyline
+                    points="21,37 31,47 51,27"
+                    stroke="#3674B5" strokeWidth="4.5"
+                    strokeLinecap="round" strokeLinejoin="round"
+                    fill="none"
+                    strokeDasharray="60"
+                    style={{ animation: "checkDraw 0.45s ease 0.35s both" }}
+                  />
+                </svg>
+              </div>
+
+              <h2 style={posS.title}>¡Venta registrada!</h2>
+              <p style={posS.sub}>El pedido fue procesado correctamente</p>
+
+              {/* Resumen */}
+              <div style={posS.resumen}>
+                <div style={posS.resumenRow}>
+                  <span style={posS.resumenLabel}>Cliente</span>
+                  <span style={posS.resumenVal}>{ventaExitosa.clienteNombre}</span>
+                </div>
+                <div style={posS.resumenRow}>
+                  <span style={posS.resumenLabel}>Total</span>
+                  <span style={{ ...posS.resumenVal, color: "#3674B5", fontWeight: 800, fontSize: 18 }}>
+                    ${fmt(ventaExitosa.total)}
+                  </span>
+                </div>
+              </div>
+
+              <button style={posS.btnCerrar} onClick={() => setVentaExitosa(null)}>
+                Nueva venta
+              </button>
+            </div>
+          </div>
+        </>
       )}
 
       {/* TABS */}

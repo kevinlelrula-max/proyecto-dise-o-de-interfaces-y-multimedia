@@ -82,7 +82,7 @@ export default function Productos() {
           <div style={s.statsRow}>
             <div style={s.statCard}>
               <span style={s.statLabel}>Total productos</span>
-              <span style={{ ...s.statValue, color: "#0F6E56" }}>{productos.length}</span>
+              <span style={{ ...s.statValue, color: "#3674B5" }}>{productos.length}</span>
             </div>
             <div style={s.statCard}>
               <span style={s.statLabel}>Mostrando</span>
@@ -188,8 +188,8 @@ const s = {
   headerTitle: { fontSize: "20px", fontWeight: "700", color: "#0f172a", margin: 0 },
   btnNew: {
     display: "flex", alignItems: "center", gap: "6px",
-    padding: "9px 20px", backgroundColor: "#0F6E56",
-    color: "#E1F5EE", border: "none", borderRadius: "10px",
+    padding: "9px 20px", backgroundColor: "#3674B5",
+    color: "white", border: "none", borderRadius: "10px",
     cursor: "pointer", fontSize: "14px", fontWeight: "600",
   },
 
@@ -208,8 +208,8 @@ const s = {
     marginBottom: "-2px", display: "flex", alignItems: "center", gap: "6px",
   },
   tabActive: {
-    color: "#0F6E56",
-    borderBottomColor: "#0F6E56",
+    color: "#3674B5",
+    borderBottomColor: "#3674B5",
   },
 
   // Stats
@@ -244,7 +244,7 @@ const s = {
     padding: "7px 12px", background: "transparent", border: "none",
     cursor: "pointer", fontSize: "16px", color: "#94a3b8", lineHeight: 1,
   },
-  viewBtnActive: { backgroundColor: "#E1F5EE", color: "#0F6E56" },
+  viewBtnActive: { backgroundColor: "#E1F5EE", color: "#3674B5" },
 
   // Paginación
   pagination: { display: "flex", justifyContent: "center", alignItems: "center", gap: "12px", marginTop: "20px" },

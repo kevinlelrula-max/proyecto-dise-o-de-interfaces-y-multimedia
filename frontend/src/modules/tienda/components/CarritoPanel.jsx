@@ -115,7 +115,7 @@ const s = {
   headerLeft: { display: "flex", alignItems: "center", gap: 8 },
   titulo: { fontSize: 16, fontWeight: 700, color: "#0f172a" },
   badge: {
-    background: "#0F6E56", color: "#fff",
+    background: "#3674B5", color: "#fff",
     fontSize: 11, fontWeight: 700,
     padding: "2px 7px", borderRadius: 99,
   },
@@ -148,13 +148,13 @@ const s = {
   },
   kiloBtn: {
     width: 26, height: 26, borderRadius: 6,
-    border: "1px solid #d1e8e0", background: "#fff",
-    color: "#0F6E56", fontWeight: 700, fontSize: 14,
+    border: "1px solid #bfdbfe", background: "#fff",
+    color: "#3674B5", fontWeight: 700, fontSize: 14,
     cursor: "pointer",
   },
   kilosVal: { fontSize: 13, fontWeight: 600, color: "#0f172a", minWidth: 48, textAlign: "center" },
   itemBottom: { display: "flex", justifyContent: "space-between", alignItems: "center" },
-  itemSubtotal: { fontSize: 14, fontWeight: 800, color: "#0F6E56" },
+  itemSubtotal: { fontSize: 14, fontWeight: 800, color: "#3674B5" },
   eliminarBtn: {
     background: "none", border: "none",
     color: "#ef4444", fontSize: 12,
@@ -173,7 +173,7 @@ const s = {
   btnPedido: {
     width: "100%",
     padding: "13px",
-    background: "#0F6E56",
+    background: "#3674B5",
     color: "#fff",
     border: "none",
     borderRadius: 10,
