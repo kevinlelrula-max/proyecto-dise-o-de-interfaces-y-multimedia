@@ -16,7 +16,9 @@ export default function ProductoCard({ producto, onAgregar }) {
   const sinStock = producto.stock === 0;
 
   const imgSrc = producto.imagen_url
-    ? `${API_BASE}${producto.imagen_url}`
+    ? producto.imagen_url.startsWith("http")
+      ? producto.imagen_url
+      : `${API_BASE}${producto.imagen_url}`
     : null;
 
   const handleAgregar = () => {
