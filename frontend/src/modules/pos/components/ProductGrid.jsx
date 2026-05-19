@@ -33,7 +33,7 @@ export default function ProductGrid({ productos, agregarProducto, busqueda, setB
           >
             {/* 🖼️ IMAGEN */}
             <img
-              src={p.imagen_url ? `${API_BASE}${p.imagen_url}` : IMG_PLACEHOLDER}
+              src={p.imagen_url ? (p.imagen_url.startsWith("http") ? p.imagen_url : `${API_BASE}${p.imagen_url}`) : IMG_PLACEHOLDER}
               alt={p.nombre}
               className="prod-card-img"
               onError={(e) => e.target.src = IMG_PLACEHOLDER}
