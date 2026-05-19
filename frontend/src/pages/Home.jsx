@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { img1, img2, img3, img7, img8, img9 } from "./images";
 import logoWarefish from "../assets/logowarefish.png";
 import afichePesquera from "../assets/afiche.png";
+import aficheSistema from "../assets/afiche_sistema.jpg";
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 32 },
@@ -85,9 +86,7 @@ function SeccionVideo() {
     return (
       <section style={vid.section}>
         <motion.div style={vid.inner} {...fadeUp(0)}>
-          <div style={vid.tag}>🎬 Video institucional</div>
-          <h2 style={vid.title}>Conoce Pesquera Estrada</h2>
-          <p style={vid.subtitle}>Del Orinoco a tu mesa — pescado fresco con tradición y tecnología.</p>
+          <h2 style={vid.title}>Video promocional del sistema</h2>
           <div style={vid.playerWrap} onClick={togglePlay}>
             <video
               ref={videoRef}
@@ -96,6 +95,7 @@ function SeccionVideo() {
               style={vid.video}
               onEnded={() => setPlaying(false)}
               playsInline
+              controls
             />
             {!playing && (
               <div style={vid.playOverlay}>
@@ -499,29 +499,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── FEATURES ── */}
-      <section id="features" style={{ padding: "96px 32px", backgroundColor: "#f8fafc" }}>
-        <motion.div style={f.header} {...fadeUp(0)}>
-          <div style={f.badge}>Funcionalidades</div>
-          <h2 style={f.title}>Todo lo que tu empresa necesita</h2>
-          <p style={f.subtitle}>Una plataforma completa para gestionar cada aspecto de tu negocio.</p>
+      {/* ── INFOGRÁFICO ── */}
+      <section style={{ padding: "72px 32px", backgroundColor: "#0f172a", display: "flex", flexDirection: "column", alignItems: "center", gap: "24px" }}>
+        <motion.div {...fadeUp(0)} style={{ textAlign: "center" }}>
+          <div style={{ display: "inline-block", padding: "4px 16px", borderRadius: "999px", border: "1px solid rgba(96,165,250,0.3)", color: "#93c5fd", fontSize: "13px", fontWeight: "600", marginBottom: "12px", backgroundColor: "rgba(37,99,235,0.08)" }}>¿Por qué WareFish?</div>
+          <h2 style={{ fontSize: "32px", fontWeight: "800", color: "white", letterSpacing: "-0.02em" }}>Todo lo que tu empresa necesita en un solo lugar</h2>
         </motion.div>
-        <div style={f.grid}>
-          {features.map((feat, i) => (
-            <motion.div key={i} style={f.card}
-              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }} transition={{ delay: i * 0.08, duration: 0.5 }}
-              whileHover={{ y: -4, boxShadow: "0 12px 32px rgba(0,0,0,0.1)" }}
-            >
-              <div style={{ ...f.iconWrap, backgroundColor: feat.bg }}>
-                <span style={{ fontSize: "22px" }}>{feat.icon}</span>
-              </div>
-              <h3 style={{ ...f.cardTitle, color: feat.color }}>{feat.title}</h3>
-              <p style={f.cardDesc}>{feat.desc}</p>
-            </motion.div>
-          ))}
-        </div>
+        <motion.div {...fadeUp(0.15)} style={{ maxWidth: "960px", width: "100%" }}>
+          <img src={aficheSistema} alt="Infográfico WareFish" style={{ width: "100%", borderRadius: "20px", boxShadow: "0 32px 80px rgba(0,0,0,0.5)", display: "block" }} />
+        </motion.div>
       </section>
+
 
       {/* ── CONTROL ── */}
       <section id="control" style={sy.section}>
