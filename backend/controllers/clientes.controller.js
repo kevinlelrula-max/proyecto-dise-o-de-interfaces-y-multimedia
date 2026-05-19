@@ -8,9 +8,16 @@ export const getClientes = async (req, res) => {
     const empresa_id = req.user.empresa_id;
 
     const result = await pool.query(
-      `SELECT id, nombre, apellido, usuario, telefono, direccion, numero_documento
-       FROM persona 
-       WHERE empresa_id = $1 AND rol_id = 4`,
+      `SELECT DISTINCT p.id, p.nombre, p.apellido, p.usuario, p.telefono, p.direccion, p.numero_documento
+       FROM persona p
+       WHERE p.rol_id = 4
+         AND (
+           p.empresa_id = $1
+           OR p.id IN (
+             SELECT DISTINCT cliente_id FROM pedidos_online WHERE empresa_id = $1
+           )
+         )
+       ORDER BY p.nombre`,
       [empresa_id]
     );
 
@@ -27,11 +34,17 @@ export const buscarClientes = async (req, res) => {
     const { q } = req.query;
 
     const result = await pool.query(
-      `SELECT id, nombre, apellido, numero_documento, telefono
-       FROM persona
-       WHERE empresa_id = $1 AND rol_id = 4
-         AND (nombre ILIKE $2 OR apellido ILIKE $2 OR numero_documento ILIKE $2)
-       ORDER BY nombre
+      `SELECT DISTINCT p.id, p.nombre, p.apellido, p.numero_documento, p.telefono
+       FROM persona p
+       WHERE p.rol_id = 4
+         AND (
+           p.empresa_id = $1
+           OR p.id IN (
+             SELECT DISTINCT cliente_id FROM pedidos_online WHERE empresa_id = $1
+           )
+         )
+         AND (p.nombre ILIKE $2 OR p.apellido ILIKE $2 OR p.numero_documento ILIKE $2)
+       ORDER BY p.nombre
        LIMIT 10`,
       [empresa_id, `%${q}%`]
     );
@@ -257,6 +270,7 @@ export const registrarClientePublico = async (req, res) => {
       numero_documento,
       tipo_documento,
       id_municipio,
+      empresa_id,
     } = req.body;
 
     if (!usuario || !contrasena) {
@@ -266,12 +280,13 @@ export const registrarClientePublico = async (req, res) => {
     const hash = await bcrypt.hash(contrasena, 10);
 
     const result = await pool.query(
-      `INSERT INTO persona 
+      `INSERT INTO persona
       (empresa_id, nombre, apellido, usuario, contrasena, telefono, direccion,
        numero_documento, tipo_documento, id_municipio, rol_id)
-      VALUES (NULL,$1,$2,$3,$4,$5,$6,$7,$8,$9,4)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,4)
       RETURNING id, nombre, usuario, rol_id`,
       [
+        empresa_id || null,
         nombre,
         apellido || null,
         usuario,

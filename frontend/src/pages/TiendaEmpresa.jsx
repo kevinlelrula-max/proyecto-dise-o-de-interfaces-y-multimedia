@@ -106,7 +106,7 @@ export default function TiendaEmpresa() {
                 <button style={s.navBtnGhost} onClick={() => navigate("/tienda/login", { state: { from: location.pathname } })}>
                   Iniciar sesión
                 </button>
-                <button style={s.navBtnPrimary} onClick={() => navigate("/tienda/registro")}>
+                <button style={s.navBtnPrimary} onClick={() => navigate("/tienda/registro", { state: { empresa_id: empresaId } })}>
                   Registrarse
                 </button>
               </>

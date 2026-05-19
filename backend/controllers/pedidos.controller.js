@@ -202,6 +202,7 @@ export const getPedidosEmpresa = async (req, res) => {
     const pedidosResult = await pool.query(
       `SELECT
          p.id,
+         p.cliente_id,
          p.estado,
          p.total,
          p.direccion_entrega,

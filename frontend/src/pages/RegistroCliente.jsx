@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { registroCliente } from "../services/api";
 import { getDepartamentos, getMunicipios } from "../modules/ubicacion/services/ubicacion.api";
 import logoWarefish from "../assets/logowarefish.png";
 
 export default function RegistroCliente() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const empresaIdDeRuta = location.state?.empresa_id || null;
   const [step, setStep]         = useState(1);
   const [loading, setLoading]   = useState(false);
   const [error, setError]       = useState("");
@@ -27,7 +29,7 @@ export default function RegistroCliente() {
     _departamento:    "",
     id_municipio:     "",
     rol_id:           4,
-    empresa_id:       null,
+    empresa_id:       empresaIdDeRuta,
   });
 
   useEffect(() => {
