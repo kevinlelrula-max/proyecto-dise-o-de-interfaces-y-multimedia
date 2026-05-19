@@ -43,7 +43,7 @@ const PAGE_SECTIONS = ["features", "control", "how"];
 // Opciones:
 //   Video local:   VIDEO_SRC = "/video/publicitario.mp4"  (poner en public/video/)
 //   YouTube embed: VIDEO_SRC = null  →  poner el ID en YOUTUBE_ID
-const VIDEO_SRC    = null;                    //← reemplaza con ruta local si tienes el mp4
+const VIDEO_SRC    = "/video/publicitario.mp4";
 const YOUTUBE_ID   = null;                    //← reemplaza con el ID de YouTube (ej: "dQw4w9WgXcQ")
 const VIDEO_POSTER = null;                    // ← imagen de portada opcional (ruta local o URL)
 
