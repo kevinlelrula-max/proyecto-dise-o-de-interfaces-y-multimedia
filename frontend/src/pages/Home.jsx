@@ -289,41 +289,41 @@ export default function Home() {
       <BreadcrumbBar activePage={activePage} activeEmpresa={activeEmpresa} />
 
       {/* ── HERO ── */}
-      <section id="hero-section" style={h.section}>
+      <section id="hero-section" style={{ ...h.section, padding: 0, overflow: "hidden" }}>
         <div style={h.glow1} /><div style={h.glow2} />
-        <div style={h.inner}>
-          <motion.div style={h.textCol} {...fadeUp(0)}>
-            <div style={h.badge}>🚀 Plataforma SaaS multi-empresa</div>
-            <h1 style={h.title}>Gestiona tu empresa<br /><span style={h.titleAccent}>sin límites</span></h1>
-            <p style={h.subtitle}>Productos, ventas, clientes y usuarios — todo desde un panel intuitivo, seguro y diseñado para crecer con tu negocio.</p>
 
-            {/* CTAs empresa */}
-            <div style={h.ctas}>
-              <button onClick={() => navigate("/empresa/login")} style={h.ctaPrimary}>Acceso empresa →</button>
-            </div>
+        {/* Texto izquierda */}
+        <motion.div style={{ position: "relative", zIndex: 1, flex: "0 0 50%", padding: "48px 40px 48px 56px", display: "flex", flexDirection: "column", justifyContent: "center" }} {...fadeUp(0)}>
+          <h1 style={h.title}>Tu pesquera<br /><span style={h.titleAccent}>digitalizada</span></h1>
+          <p style={h.subtitle}>Inventario, ventas, clientes y pedidos en línea. Todo desde un sistema diseñado para empresas pesqueras.</p>
 
-            {/* Separador cliente */}
-            <div style={h.divider}>
-              <span style={h.dividerLine} />
-              <span style={h.dividerText}>¿eres cliente y quieres comprar?</span>
-              <span style={h.dividerLine} />
-            </div>
-            <button onClick={() => navigate("/tienda")} style={h.ctaTienda}>
-              🛒 Ir a la tienda online →
-            </button>
+          <div style={h.ctas}>
+            <button onClick={() => navigate("/empresa/login")} style={h.ctaPrimary}>Acceso empresa →</button>
+          </div>
 
-            <div style={h.trust}>
-              <span style={h.trustDot} />
-              <span style={h.trustText}>Sin tarjeta de crédito · Configuración en 5 minutos</span>
-            </div>
-          </motion.div>
+          <div style={h.divider}>
+            <span style={h.dividerLine} />
+            <span style={h.dividerText}>¿eres cliente y quieres comprar?</span>
+            <span style={h.dividerLine} />
+          </div>
+          <button onClick={() => navigate("/tienda")} style={h.ctaTienda}>
+            🛒 Ir a la tienda online →
+          </button>
 
-          <motion.div style={h.imgCol} {...fadeUp(0.2)}>
-            <div style={h.imgFrame}>
-              <img src={afichePesquera} alt="Pesquera Estrada" style={{ ...h.img, objectFit: "cover", borderRadius: "18px" }} />
-            </div>
-          </motion.div>
-        </div>
+          <div style={h.trust}>
+            <span style={h.trustDot} />
+            <span style={h.trustText}>Tecnología diseñada para empresas pesqueras</span>
+          </div>
+        </motion.div>
+
+        {/* Afiche derecha — ocupa exactamente la mitad de la sección */}
+        <motion.div {...fadeUp(0.2)} style={{ flex: "0 0 50%", alignSelf: "stretch", overflow: "hidden", display: "flex", alignItems: "center" }}>
+          <img
+            src={afichePesquera}
+            alt="Pesquera Estrada"
+            style={{ width: "100%", display: "block" }}
+          />
+        </motion.div>
       </section>
 
       {/* ── STATS ── */}
@@ -681,10 +681,10 @@ const n = {
 
 /* ─── HERO ─── */
 const h = {
-  section: { minHeight: "calc(100vh - 102px)", background: "linear-gradient(145deg, #0f172a 0%, #0d2b45 50%, #0f1f2e 100%)", display: "flex", alignItems: "center", padding: "60px 32px", position: "relative", overflow: "hidden" },
+  section: { minHeight: "600px", height: "75vh", background: "linear-gradient(145deg, #0f172a 0%, #0d2b45 50%, #0f1f2e 100%)", display: "flex", alignItems: "stretch", padding: 0, position: "relative", overflow: "hidden" },
   glow1: { position: "absolute", top: "-200px", left: "-200px", width: "600px", height: "600px", borderRadius: "50%", background: "radial-gradient(circle, rgba(37,99,235,0.2) 0%, transparent 70%)", pointerEvents: "none" },
   glow2: { position: "absolute", bottom: "-200px", right: "-100px", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle, rgba(96,165,250,0.12) 0%, transparent 70%)", pointerEvents: "none" },
-  inner: { maxWidth: "1200px", margin: "0 auto", width: "100%", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "64px", alignItems: "center", position: "relative", zIndex: 1 },
+  inner: { maxWidth: "1300px", margin: "0 auto", width: "100%", display: "grid", gridTemplateColumns: "1fr 1.6fr", gap: "48px", alignItems: "center", position: "relative", zIndex: 1 },
   textCol: {},
   badge: { display: "inline-flex", alignItems: "center", gap: "6px", padding: "5px 14px", borderRadius: "999px", border: "1px solid rgba(37,99,235,0.4)", color: "#93c5fd", fontSize: "13px", fontWeight: "500", marginBottom: "20px", backgroundColor: "rgba(37,99,235,0.08)" },
   title: { fontSize: "52px", fontWeight: "800", color: "white", lineHeight: "1.1", letterSpacing: "-0.03em", marginBottom: "20px" },
