@@ -211,7 +211,9 @@ export default function Tienda() {
               const isHovered = hoveredId === producto.id;
 
               const imgSrc = producto.imagen_url
-                ? `${API_BASE}${producto.imagen_url}`
+                ? producto.imagen_url.startsWith("http")
+                  ? producto.imagen_url
+                  : `${API_BASE}${producto.imagen_url}`
                 : null;
 
               return (
