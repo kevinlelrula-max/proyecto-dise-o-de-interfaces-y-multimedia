@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { img1, img2, img3, img7, img8, img9 } from "./images";
 import logoWarefish from "../assets/logowarefish.png";
+import afichePesquera from "../assets/afiche.png";
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 32 },
@@ -37,6 +38,92 @@ const EMPRESA_SECTIONS = [
   { id: "sec-proceso",    label: "Proceso administrativo" },
 ];
 const PAGE_SECTIONS = ["features", "control", "how"];
+
+// ── URL del video publicitario ────────────────────────────────────────────────
+// Opciones:
+//   Video local:   VIDEO_SRC = "/video/publicitario.mp4"  (poner en public/video/)
+//   YouTube embed: VIDEO_SRC = null  →  poner el ID en YOUTUBE_ID
+const VIDEO_SRC    = null;                    //← reemplaza con ruta local si tienes el mp4
+const YOUTUBE_ID   = null;                    //← reemplaza con el ID de YouTube (ej: "dQw4w9WgXcQ")
+const VIDEO_POSTER = null;                    // ← imagen de portada opcional (ruta local o URL)
+
+function SeccionVideo() {
+  const [playing, setPlaying] = useState(false);
+  const videoRef = useRef(null);
+
+  const togglePlay = () => {
+    if (!videoRef.current) return;
+    if (playing) { videoRef.current.pause(); }
+    else          { videoRef.current.play();  }
+    setPlaying(!playing);
+  };
+
+  // Si hay YouTube ID, embed directo
+  if (YOUTUBE_ID) {
+    return (
+      <section style={vid.section}>
+        <motion.div style={vid.inner} {...fadeUp(0)}>
+          <div style={vid.tag}>🎬 Video institucional</div>
+          <h2 style={vid.title}>Conoce Pesquera Estrada</h2>
+          <p style={vid.subtitle}>Del Orinoco a tu mesa — pescado fresco con tradición y tecnología.</p>
+          <div style={vid.frameWrap}>
+            <iframe
+              style={vid.iframe}
+              src={`https://www.youtube.com/embed/${YOUTUBE_ID}?rel=0&modestbranding=1`}
+              title="Video publicitario Pesquera Estrada"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </motion.div>
+      </section>
+    );
+  }
+
+  // Si hay video local
+  if (VIDEO_SRC) {
+    return (
+      <section style={vid.section}>
+        <motion.div style={vid.inner} {...fadeUp(0)}>
+          <div style={vid.tag}>🎬 Video institucional</div>
+          <h2 style={vid.title}>Conoce Pesquera Estrada</h2>
+          <p style={vid.subtitle}>Del Orinoco a tu mesa — pescado fresco con tradición y tecnología.</p>
+          <div style={vid.playerWrap} onClick={togglePlay}>
+            <video
+              ref={videoRef}
+              src={VIDEO_SRC}
+              poster={VIDEO_POSTER || undefined}
+              style={vid.video}
+              onEnded={() => setPlaying(false)}
+              playsInline
+            />
+            {!playing && (
+              <div style={vid.playOverlay}>
+                <div style={vid.playBtn}>▶</div>
+              </div>
+            )}
+          </div>
+        </motion.div>
+      </section>
+    );
+  }
+
+  // Placeholder mientras no hay video
+  return (
+    <section style={vid.section}>
+      <motion.div style={vid.inner} {...fadeUp(0)}>
+        <div style={vid.tag}>🎬 Video institucional</div>
+        <h2 style={vid.title}>Conoce Pesquera Estrada</h2>
+        <p style={vid.subtitle}>Del Orinoco a tu mesa — pescado fresco con tradición y tecnología.</p>
+        <div style={vid.placeholder}>
+          <div style={vid.placeholderIcon}>🎬</div>
+          <p style={vid.placeholderText}>Video publicitario próximamente</p>
+          <p style={vid.placeholderSub}>Generado con IA · Pesquera Estrada 2026</p>
+        </div>
+      </motion.div>
+    </section>
+  );
+}
 
 function MapaInteractivo() {
   const [mapMode, setMapMode] = useState("mapa");
@@ -233,14 +320,7 @@ export default function Home() {
 
           <motion.div style={h.imgCol} {...fadeUp(0.2)}>
             <div style={h.imgFrame}>
-              <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=700&q=80" alt="Dashboard FishWare" style={h.img} />
-              <div style={h.floatBadge}>
-                <span style={{ fontSize: "18px" }}>📈</span>
-                <div>
-                  <div style={h.floatTitle}>Ventas hoy</div>
-                  <div style={h.floatValue}>+34% vs ayer</div>
-                </div>
-              </div>
+              <img src={afichePesquera} alt="Pesquera Estrada" style={{ ...h.img, objectFit: "cover", borderRadius: "18px" }} />
             </div>
           </motion.div>
         </div>
@@ -257,6 +337,9 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* ── VIDEO PUBLICITARIO ── */}
+      <SeccionVideo />
 
       {/* ── HISTORIA ── */}
       <section id="sec-historia" style={info.section}>
@@ -630,8 +713,8 @@ const h = {
   trust: { display: "flex", alignItems: "center", gap: "8px" },
   trustDot: { width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "#60a5fa", display: "inline-block" },
   trustText: { fontSize: "13px", color: "rgba(255,255,255,0.45)" },
-  imgCol: { position: "relative" },
-  imgFrame: { borderRadius: "16px", overflow: "visible", position: "relative" },
+  imgCol: { position: "relative", display: "flex", justifyContent: "center", alignItems: "center" },
+  imgFrame: { borderRadius: "16px", overflow: "visible", position: "relative", width: "75%" },
   img: { width: "100%", borderRadius: "16px", boxShadow: "0 40px 80px rgba(0,0,0,0.4)", display: "block" },
   floatBadge: { position: "absolute", bottom: "-18px", left: "-18px", backgroundColor: "white", borderRadius: "12px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "10px", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" },
   floatTitle: { fontSize: "11px", color: "#64748b", fontWeight: "500" },
@@ -696,4 +779,29 @@ const fo = {
   brand: { display: "flex", alignItems: "center", gap: "8px" },
   brandName: { fontSize: "15px", fontWeight: "700", color: "white" },
   copy: { fontSize: "13px", color: "rgba(255,255,255,0.4)" },
+};
+
+/* ─── VIDEO ─── */
+const vid = {
+  section: { backgroundColor: "#0a1628", padding: "80px 32px" },
+  inner:   { maxWidth: "900px", margin: "0 auto", textAlign: "center" },
+  tag:     { display: "inline-block", fontSize: "12px", fontWeight: "600", color: "#60a5fa", backgroundColor: "rgba(54,116,181,0.15)", border: "1px solid rgba(96,165,250,0.3)", padding: "3px 14px", borderRadius: "999px", marginBottom: "14px", letterSpacing: "0.04em" },
+  title:   { fontSize: "34px", fontWeight: "800", color: "white", letterSpacing: "-0.02em", marginBottom: "10px" },
+  subtitle:{ fontSize: "15px", color: "rgba(255,255,255,0.55)", marginBottom: "36px", lineHeight: "1.6" },
+
+  // YouTube embed
+  frameWrap: { position: "relative", width: "100%", paddingBottom: "56.25%", borderRadius: "18px", overflow: "hidden", boxShadow: "0 40px 80px rgba(0,0,0,0.5)", border: "1px solid rgba(255,255,255,0.08)" },
+  iframe:    { position: "absolute", inset: 0, width: "100%", height: "100%", border: "none" },
+
+  // Video local
+  playerWrap:  { position: "relative", borderRadius: "18px", overflow: "hidden", cursor: "pointer", boxShadow: "0 40px 80px rgba(0,0,0,0.5)", border: "1px solid rgba(255,255,255,0.08)" },
+  video:       { width: "100%", display: "block", maxHeight: "500px", objectFit: "cover" },
+  playOverlay: { position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.35)", transition: "background 0.2s" },
+  playBtn:     { width: "72px", height: "72px", borderRadius: "50%", backgroundColor: "rgba(54,116,181,0.9)", color: "white", fontSize: "28px", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 8px 32px rgba(54,116,181,0.5)", paddingLeft: "4px" },
+
+  // Placeholder
+  placeholder:     { border: "2px dashed rgba(255,255,255,0.12)", borderRadius: "18px", padding: "80px 40px", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" },
+  placeholderIcon: { fontSize: "56px", opacity: 0.4 },
+  placeholderText: { fontSize: "16px", fontWeight: "600", color: "rgba(255,255,255,0.5)", margin: 0 },
+  placeholderSub:  { fontSize: "13px", color: "rgba(255,255,255,0.25)", margin: 0 },
 };
